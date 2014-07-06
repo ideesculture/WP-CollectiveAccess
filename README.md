@@ -11,11 +11,12 @@ inside Wordpress, using web services.
 WP-CollectiveAccess is a project lead by idéesculture, a small french company, involved in CollectiveAccess development 
 through french translation & a dedicated module for Musées de France museums, tiny devs... We provide CollectiveAccess 
 services to museum, tourism offices in France & french-speaking countries. 
+
 This project was funded by Pro-Memoria, an italian company providing CollectiveAccess services.
 
 ### About CollectiveAccess
-CollectiveAccess is an opensource web-based suite of applications providing a framework for management, description, and discovery 
-of complex digital and physical collections.
+CollectiveAccess is an opensource web-based suite of applications providing a framework for management, description, and discovery  of complex digital and physical collections.
+
 CollectiveAccess is a registered trademark by Whirl-i-Gig in the USA. It has been brought by a collaboration between and 
 partner institutions in North America and Europe with projects in 5 continents.
 
@@ -57,8 +58,8 @@ it.  It is used to import widgets data similar to original demo.
 ## Thanks
 
 ### Project team
-Our small idéesculture team
-Promemoria for this project impulsion & funding
+- Our small idéesculture team
+- Promemoria for this project impulsion & funding
 
 ### Many thanks to...
 We would like to cite the following projects whose code, fonts or graphics are included or used by this WP-CollectiveAccess plugin :
