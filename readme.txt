@@ -69,6 +69,11 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 (or jpg, jpeg, gif).
 2. This is the second screen shot
 
+== Upgrade Notice ==
+
+1. Replace older version with the new one inside wp-content/plugins. Former parameters value will be kept.
+1. Take a look at Settings > CollectiveAccess to verify the presence of eventual new parameters.
+
 == Changelog ==
 
 = 0.1 =
