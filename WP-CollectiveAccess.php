@@ -56,6 +56,19 @@ function collectiveaccess_install() {
         "mode" => "zombie"
     );
     update_option("collectiveaccess_options", $collectiveaccess_options);
+
+	/* CREATE wp_ca_cache :
+	CREATE TABLE `wp_ca_cache` (
+	  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+	  `service` text,
+	  `table` text,
+	  `target` text,
+	  `json` longblob,
+	  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	  PRIMARY KEY (`id`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+	*/
 }
 
 function collectiveaccess_uninstall() {
