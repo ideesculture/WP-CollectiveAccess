@@ -20,6 +20,14 @@ CollectiveAccess is an opensource web-based suite of applications providing a fr
 CollectiveAccess is a registered trademark by Whirl-i-Gig in the USA. It has been brought by a collaboration between and 
 partner institutions in North America and Europe with projects in 5 continents.
 
+### Where to find last version of WP-CollectiveAccess version ?
+
+This github repository stays the main place to look at : https://github.com/ideesculture/WP-CollectiveAccess
+
+I've asked for an entry inside WordPress plugin listing, when granted it will be at : http://wordpress.org/plugins/wp-collectiveaccess/
+
+It may take a while as Wordpress has 134 plugins (sic) to validate before this one.
+
 ## Installation
 
 ### Installing WP-CollectiveAccess
