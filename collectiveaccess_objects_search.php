@@ -6,13 +6,15 @@
  * Time: 15:32
  */
 
-require_once(plugin_dir_path( __FILE__ ) ."lib/cawrapper/SearchService.php");
+require_once(plugin_dir_path( __FILE__ ) ."lib/cawrappercache/SearchServiceCache.php");
 
 
 $vp->add('#/collections/objects/search#i', 'collectiveaccess_search_results');
 
 function collectiveaccess_search_results($v, $url)
 {
+    global $wpdb;
+
     // getting query from post or get
     if (!($query=$_POST["query"])) $query=$_GET["query"];
     // if not GET or POST query, trying to extract from route
@@ -27,15 +29,14 @@ function collectiveaccess_search_results($v, $url)
     $url_base = empty( $options[url_base] ) ? 'localhost' : $options[url_base];
     $login = empty($options[login]) ? 'admin' : $options[login];
     $password = empty($options[password]) ? 'admin' : $options[password];
-
-
+    $cache_duration = empty($options[cache_duration]) ? 3600 : $options[cache_duration];
 
     if ( !empty( $title ) ) { echo $before_title . $title . $after_title; };
 
     // TODO : do not show anything if no password, send an error message on screen
 
     if ($url_base && $query) {
-        $client = new SearchService("http://".$login.":".$password."@".$url_base,"ca_objects",$query);
+        $client = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,"ca_objects",$query);
         $request = $client->request();
         $result_data = $request->getRawData()["results"];
         //var_dump($result_data);die();
