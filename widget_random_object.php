@@ -5,7 +5,7 @@
  * Date: 26/06/2014
  * Time: 06:38
  */
-require_once(plugin_dir_path( __FILE__ ) ."lib/cawrapper/ItemService.php");
+require_once(plugin_dir_path( __FILE__ ) ."lib/cawrappercache/ItemServiceCache.php");
 
 add_action( 'widgets_init', 'collectiveaccess_register_random_object_widget' );
 
