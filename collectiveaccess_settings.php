@@ -40,6 +40,8 @@ function collectiveaccess_admin_init() {
         'collectiveaccess','collectiveaccess_main');
     add_settings_field('collectiveaccess_password','Password','collectiveaccess_password_input',
         'collectiveaccess','collectiveaccess_main');
+    add_settings_field('collectiveaccess_cache_duration','Cache duration','collectiveaccess_cache_duration_input',
+        'collectiveaccess','collectiveaccess_main');
     add_settings_section('collectiveaccess_templates','Templates','collectiveaccess_templates_text',
         'collectiveaccess');
     add_settings_field('collectiveaccess_objects_template','Objects','collectiveaccess_objects_template_input',
@@ -88,6 +90,15 @@ function collectiveaccess_password_input() {
     echo "<input id='password' type='password' name='collectiveaccess_options[password]' value='$password' />";
 }
 
+function collectiveaccess_cache_duration_input() {
+    // get option 'login' value from the database
+    $options = get_option('collectiveaccess_options');
+    $cache_duration = $options['cache_duration'];
+    //var_dump($url_base);die();
+    // echo the field
+    echo "<input id='cache_duration' name='collectiveaccess_options[cache_duration]' type='text' value='$cache_duration' />";
+}
+
 function collectiveaccess_objects_template_input() {
     // get option 'login' value from the database
     $options = get_option('collectiveaccess_options');
@@ -112,6 +123,7 @@ function collectiveaccess_validate_options($input) {
     $valid['login'] = preg_replace('/[^a-zA_Z]/','',$input['login']);
     $valid['password'] = preg_replace('/[^a-zA_Z0-9]/','',$input['password']);
     $valid['url_base'] = preg_replace('/[^a-zA_Z0-9\.\/]/','',$input['url_base']);
+    $valid['cache_duration'] = preg_replace('/[^\d]/','',$input['cache_duration']);
     $valid['objects_template'] = preg_replace('/[^a-zA_Z0-9]/','',$input['objects_template']);
     $valid['entities_template'] = preg_replace('/[^a-zA_Z0-9]/','',$input['entities_template']);
     return $valid;
