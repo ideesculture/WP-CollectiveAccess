@@ -34,6 +34,9 @@ It may take a while as Wordpress has 134 plugins (sic) to validate before this o
 
 You need to have php-curl installed and wordpress permalinks option activated.
 
+IMPORTANT : to allow featured image of the posts (aka header picture), you need to install & activate the Wordpress plugin Default featured image and set a default image for the posts.
+This image will be replaced on each object detailed, whenever an object representation is available.
+
 ### Installing WP-CollectiveAccess
 
 Download WP-CollectiveAccess from github & uncompress it inside wp-content/plugins
