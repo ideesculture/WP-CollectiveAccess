@@ -29,6 +29,7 @@ function collectiveaccess_collection_detail($v, $url){
 function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
 {
 	global $wpdb;
+    global $wp_ca_thumbnail;
 
     // extract an id from the URL
     $id = 'none';
@@ -58,9 +59,28 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
         $record = $result->getRawData();
         if(!isset($record["errors"])) {
             $v->title = $record["preferred_labels"]["fr_FR"][0];
-            $representation = reset($record["representations"]);
-            $v->body = "<p><img src=\"".$representation[urls][preview170]."\"></b></p>";
-            $v->featuredimage = $representation[urls][large];
+            $v->body = "<p>contenu</p>";
+            if ($record["representations"]) {
+                // Extracting representation info from CA
+                $representation = reset($record["representations"]);
+                $representation_id = $representation["representation_id"];
+                $r_client = new ItemServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,"ca_object_representations","GET",$representation_id);
+                $r_record = $r_client->request()->getRawData();
+                $r_large_infos = $r_record["media"]["value"]["large"];
+                $r_large_url = "http://".$url_base."/media/musee/".$r_large_infos["VOLUME"]."/".$r_large_infos["HASH"]."/".$r_large_infos["MAGIC"]."_".$r_large_infos["FILENAME"];
+                //var_dump($r_large_url);
+                //die();
+                //
+                // Generating body
+                $v->body .= "<p><img src=\"".$representation[urls][preview170]."\"></p>";
+                $wp_ca_thumbnail = "<div style=\"max-height:600px;min-height:400px;position:relative;overflow:hidden;\"><img style=\"position:absolute;margin-top:-50%\" src=\"".$r_large_url."\"></div>";
+                add_filter('post_thumbnail_html',
+                    function($html, $post_id, $post_thumbnail_id, $size, $attr) use ($wp_ca_thumbnail) {
+                        if ($wp_ca_thumbnail) return $wp_ca_thumbnail;
+                        return $html;
+                    },
+                    99, 5);
+            }
         } else {
             $v->title = "Error";
             foreach($record["errors"] as $error) {
@@ -75,5 +95,6 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
         $v->title = "Error";
         $v->body = "Configuration error";
     }
-
+    //var_dump($v);
 }
+
