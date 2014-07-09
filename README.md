@@ -30,6 +30,10 @@ It may take a while as Wordpress has 134 plugins (sic) to validate before this o
 
 ## Installation
 
+### Prerequisites
+
+You need to have php-curl installed and wordpress permalinks option activated.
+
 ### Installing WP-CollectiveAccess
 
 Download WP-CollectiveAccess from github & uncompress it inside wp-content/plugins
