@@ -58,7 +58,9 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
         $record = $result->getRawData();
         if(!isset($record["errors"])) {
             $v->title = $record["preferred_labels"]["fr_FR"][0];
-            $v->body = "<p><img src=\"".$record["representations"][1][urls][preview170]."\"></b></p>";
+            $representation = reset($record["representations"]);
+            $v->body = "<p><img src=\"".$representation[urls][preview170]."\"></b></p>";
+            $v->featuredimage = $representation[urls][large];
         } else {
             $v->title = "Error";
             foreach($record["errors"] as $error) {
