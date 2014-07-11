@@ -71,10 +71,10 @@ function collectiveaccess_install() {
   catable tinytext NOT NULL,
   mode tinytext,
   query text,
-  time datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  time timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   result blob,
   UNIQUE KEY id (id)
-    );";
+);";
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
