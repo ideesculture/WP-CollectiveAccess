@@ -59,7 +59,7 @@ function collectiveaccess_install() {
 	$installed_version = get_option( "wpca_version" );
 
 	// if version < 3.9, deactivate our plugin (not tested with a version under 3.9)
-    if( version_compare( get_bloginfo( "version" ), "3.9", "<" ) ) {
+    if( version_compare( get_bloginfo( "version" ), "3.7", "<" ) ) {
         deactivate_plugins( basename( __FILE__ ) );
     }
 	if($installed_version != $wpca_version) {
