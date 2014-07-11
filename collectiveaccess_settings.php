@@ -44,9 +44,9 @@ function collectiveaccess_admin_init() {
         'collectiveaccess','collectiveaccess_main');
     add_settings_section('collectiveaccess_templates','Templates','collectiveaccess_templates_text',
         'collectiveaccess');
-    add_settings_field('collectiveaccess_objects_template','Objects','collectiveaccess_objects_template_input',
+    add_settings_field('collectiveaccess_object_template','Objects','collectiveaccess_object_template_input',
         'collectiveaccess','collectiveaccess_templates');
-    add_settings_field('collectiveaccess_entities_template','Entities','collectiveaccess_entities_template_input',
+    add_settings_field('collectiveaccess_entity_template','Entities','collectiveaccess_entity_template_input',
         'collectiveaccess','collectiveaccess_templates');
 }
 
@@ -99,22 +99,22 @@ function collectiveaccess_cache_duration_input() {
     echo "<input id='cache_duration' name='collectiveaccess_options[cache_duration]' type='text' value='$cache_duration' />";
 }
 
-function collectiveaccess_objects_template_input() {
+function collectiveaccess_object_template_input() {
     // get option 'login' value from the database
     $options = get_option('collectiveaccess_options');
-    $objects_template = $options['objects_template'];
+    $object_template = $options['object_template'];
     // echo the field
-    echo "<textarea rows='12' cols='50' id='objects_template' name='collectiveaccess_options[objects_template]'>";
-    echo $objects_template;
+    echo "<textarea rows='12' cols='50' id='object_template' name='collectiveaccess_options[object_template]'>";
+    echo $object_template;
     echo "</textarea>";
     //var_dump($options);//die();
 }
 
-function collectiveaccess_entities_template_input() {
+function collectiveaccess_entity_template_input() {
     $options = get_option('collectiveaccess_options');
-    $entities_template = $options['entities_template'];
-    echo "<textarea rows='12' cols='50' id='entities_template' name='collectiveaccess_options[entities_template]'>";
-    echo $entities_template;
+    $entity_template = $options['entity_template'];
+    echo "<textarea rows='12' cols='50' id='entity_template' name='collectiveaccess_options[entity_template]'>";
+    echo $entity_template;
     echo "</textarea>";
 }
 
@@ -124,7 +124,8 @@ function collectiveaccess_validate_options($input) {
     $valid['password'] = preg_replace('/[^a-zA_Z0-9]/','',$input['password']);
     $valid['url_base'] = preg_replace('/[^a-zA_Z0-9\.\/]/','',$input['url_base']);
     $valid['cache_duration'] = preg_replace('/[^\d]/','',$input['cache_duration']);
-    $valid['objects_template'] = preg_replace('/[^a-zA_Z0-9]/','',$input['objects_template']);
-    $valid['entities_template'] = preg_replace('/[^a-zA_Z0-9]/','',$input['entities_template']);
+    // TODO : sanitize html & javascript for templates !
+    $valid['object_template'] = $input['object_template'];
+    $valid['entity_template'] = $input['entity_template'];
     return $valid;
 }
