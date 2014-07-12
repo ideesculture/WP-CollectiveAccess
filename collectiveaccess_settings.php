@@ -44,9 +44,11 @@ function collectiveaccess_admin_init() {
         'collectiveaccess','collectiveaccess_main');
     add_settings_section('collectiveaccess_templates','Templates','collectiveaccess_templates_text',
         'collectiveaccess');
-    add_settings_field('collectiveaccess_object_template','Objects','collectiveaccess_object_template_input',
+    add_settings_field('collectiveaccess_object_template','Object details template','collectiveaccess_object_template_input',
         'collectiveaccess','collectiveaccess_templates');
-    add_settings_field('collectiveaccess_entity_template','Entities','collectiveaccess_entity_template_input',
+    add_settings_field('collectiveaccess_object_bundles','Object bundles','collectiveaccess_object_bundles_input',
+        'collectiveaccess','collectiveaccess_templates');
+    add_settings_field('collectiveaccess_entity_template','Entitie details template','collectiveaccess_entity_template_input',
         'collectiveaccess','collectiveaccess_templates');
 }
 
@@ -110,6 +112,17 @@ function collectiveaccess_object_template_input() {
     //var_dump($options);//die();
 }
 
+function collectiveaccess_object_bundles_input() {
+    // get option 'login' value from the database
+    $options = get_option('collectiveaccess_options');
+    $object_bundles = $options['object_bundles'];
+    // echo the field
+    echo "<textarea rows='12' cols='50' id='object_bundles' name='collectiveaccess_options[object_bundles]'>";
+    echo $object_bundles;
+    echo "</textarea>";
+    //var_dump($options);//die();
+}
+
 function collectiveaccess_entity_template_input() {
     $options = get_option('collectiveaccess_options');
     $entity_template = $options['entity_template'];
@@ -126,6 +139,7 @@ function collectiveaccess_validate_options($input) {
     $valid['cache_duration'] = preg_replace('/[^\d]/','',$input['cache_duration']);
     // TODO : sanitize html & javascript for templates !
     $valid['object_template'] = $input['object_template'];
+    $valid['object_bundles'] = $input['object_bundles'];
     $valid['entity_template'] = $input['entity_template'];
     return $valid;
 }
