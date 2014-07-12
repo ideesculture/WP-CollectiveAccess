@@ -44,10 +44,10 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
     $options = get_option('collectiveaccess_options');
     //var_dump($options);die();
 
-    $url_base = empty( $options[url_base] ) ? 'localhost' : $options[url_base];
-    $login = empty($options[login]) ? 'admin' : $options[login];
-    $password = empty($options[password]) ? 'admin' : $options[password];
-    $cache_duration = empty($options[cache_duration]) ? 3600 : $options[cache_duration];
+    $url_base = empty( $options["url_base"] ) ? 'localhost' : $options["url_base"];
+    $login = empty($options["login"]) ? 'admin' : $options["login"];
+    $password = empty($options["password"]) ? 'admin' : $options["password"];
+    $cache_duration = empty($options["cache_duration"]) ? 3600 : $options["cache_duration"];
 
     if ( !empty( $title ) ) { echo $before_title . $title . $after_title; };
 
@@ -75,10 +75,12 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                 switch($bundle_parts[0]) {
                     //for representations, we have two allowed types : primary & nonprimary, we need to run all the representations to filter
                     case "representations":
-                        foreach($record["representations"] as $representation) {
-                            if (($bundle_parts[1] == "primary" ) && ($representation["is_primary"] == true)) {
-                                if ($bundle_parts[2] == "urls")
-                                    $template = str_replace("^".$bundle,$representation["urls"]["preview170"],$template);
+                        if (is_array($record["representations"])) {
+                            foreach($record["representations"] as $representation) {
+                                if (($bundle_parts[1] == "primary" ) && ($representation["is_primary"] == true)) {
+                                    if ($bundle_parts[2] == "urls")
+                                        $template = str_replace("^".$bundle,$representation["urls"]["preview170"],$template);
+                                }
                             }
                         }
                         break;
