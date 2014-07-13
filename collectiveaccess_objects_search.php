@@ -5,6 +5,8 @@
  * Date: 05/07/2014
  * Time: 15:32
  */
+require_once(plugin_dir_path( __FILE__ ) ."lib/virtualthemedpages/Virtual_Themed_Pages_BC.php");
+$vp =  new Virtual_Themed_Pages_BC();
 
 require_once(plugin_dir_path( __FILE__ ) ."lib/cawrappercache/SearchServiceCache.php");
 
@@ -17,8 +19,7 @@ function collectiveaccess_search_results($v, $url)
 
     // getting query from post or get
     if (!($query=$_POST["query"])) $query=$_GET["query"];
-    // if not GET or POST query, trying to extract from route
-    // if ((!$query) && (preg_match('#search/([^\"\r\n]*)#', $url, $m))) $query = $m[1];
+    if (!($page=$_POST["page"])) $page=1;
 
     $v->template = 'page'; // optional
     $v->subtemplate = 'collections'; // optional
@@ -36,23 +37,97 @@ function collectiveaccess_search_results($v, $url)
     // TODO : do not show anything if no password, send an error message on screen
 
     if ($url_base && $query) {
+        // Disabling Wordpress HTML sanitization to avoid having <p></p> coming everywhere
+
+        remove_filter( 'the_content', 'wpautop' );
+
         $client = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,"ca_objects",$query);
         $request = $client->request();
         $result_data = $request->getRawData()["results"];
         //var_dump($result_data);die();
-        $body .= "<p>".count($result_data)." results</p>";
+
+        $num_results = (int) count($result_data);
+        $num_per_page = 12 ;
+        $pages = floor($num_results / $num_per_page);
+        //var_dump($page);die();
+        $vignettes .= "<p>".$num_results." results</p>";
         $body .= "<ul>";
+        $i = 1;
         foreach($result_data as $result) {
-            $body .= "<li><a href=\"".get_site_url()."/collections/object/detail/".$result["id"]."\" >".$result["display_label"].($result["idno"]? " <small>(".$result["idno"].")</small>":"")."</a></li>\n";
+            if (floor(($i-1)/$num_per_page) == $page) {
+                $body .= "<li><a href=\"".get_site_url()."/collections/object/detail/".$result["id"]."\" >".
+                    $result["display_label"].
+                    ($result["idno"]? " <small>(".$result["idno"].")</small>" : "").
+                    "</a></li>\n";
+                $vignettes .= "<figure class='gallery-item'> <div class='gallery-icon landscape'> ";
+                $vignettes .= "<a href=\"".get_site_url()."/collections/object/detail/".$result["id"]."\" > \n";
+                $vignettes .= "<div class='collectiveaccess-cropping-image'><img class=\"attachment-thumbnail\" data-table=\"ca_objects\" data-id=\"".$result["id"]."\"/> </span>\n";
+                $vignettes .= "</a> </div><figcaption class='wp-caption-text gallery-caption'>";
+                $vignettes .= $result["display_label"].($result["idno"]? " <small>(".$result["idno"].")</small>":"");
+                $vignettes .= "</figcaption></figure>";
+            }
+            $i++;
         }
         $body .= "</ul>";
+        $vignettes ="<div id='gallery-1' class='gallery galleryid-555 gallery-columns-3 gallery-size-thumbnail'>".$vignettes."</div>\n";
+        $vignettes .= "<div class=\"page-links\"><span class=\"page-links-title\">Pages:</span>\n";
+        $vignettes .= "<FORM name=\"page\" action=\"".get_site_url()."/collections/objects/search\" method=\"post\">\n".
+            "<input type=\"hidden\" name=\"query\" value=\"".$query."\">".
+            "<input type=\"hidden\" name=\"page\" id=\"page\" value=\"1\">".
+            "</FORM>";
+        for ($i = 1; $i <= $pages; $i++) {
+            $vignettes .= "<a href='#' onclick=\"document.forms['page'].page.value = $i;document.forms['page'].submit();\"><span>".$i."</span></a>\n";
+        }
+        $vignettes .= "</div>";
+        $v->title = "Results for ".$query;
+        $vignettes.= "<style>figure.gallery-item p {display:none;}</style>";
+        $vignettes .=
+"<style>
+.collectiveaccess-cropping-image {
+    height:170px;
+    width:150px;
+    overflow:hidden;
+    background-color: black;
+    text-align: center;
+    vertical-align: middle;
+    display:table-cell;
+}
+</style>";
+        $vignettes.="
+<script type='text/javascript'>
+    jQuery(document).ready(function() {
+        jQuery('img.attachment-thumbnail').each(function() {
+            var getimage_table = jQuery(this).data(\"table\");
+            var getimage_id = jQuery(this).data(\"id\");
+            var jquery_this = jQuery(this);
+            jQuery.ajax({
+                type:'POST',
+                dataType: 'text',
+                url:'" . get_site_url() . "/wp-content/plugins/WP-CollectiveAccess/collectiveaccess_ajax_handler.php',
+                data: {
+                    action:'getimage',
+                    table:getimage_table,
+                    id:getimage_id
+                },
+                success:function(response){jquery_this.attr('src',JSON.parse(response))}
+            });
+        });
+    });
+
+</script>";
+        $v->body = $vignettes; //   $body.
+
     } elseif (!$url_base) {
         $v->title = "Error";
-        $v->body = "Configuration error";
+        $v->body = "Configuration error, no url_base defined. Please check your settings.";
+    } else {
+        $v->title = "Error";
+        $v->body = "No query sent.";
     }
 
 
-    $v->title = "Results for ".$query;
-    $v->body = $body;
+
+
     //var_dump($query);die();
 }
+
