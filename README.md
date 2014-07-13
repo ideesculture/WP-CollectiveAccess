@@ -4,6 +4,17 @@ Display your CollectiveAccess collections inside your Wordpress website.
 
 ## About
 
+### Screen captures
+[1]: https://raw.githubusercontent.com/ideesculture/WP-CollectiveAccess/master/assets/captures/detail.png
+[2]: https://raw.githubusercontent.com/ideesculture/WP-CollectiveAccess/master/assets/captures/detail_small.png
+[3]: https://raw.githubusercontent.com/ideesculture/WP-CollectiveAccess/master/assets/captures/search.png
+[4]: https://raw.githubusercontent.com/ideesculture/WP-CollectiveAccess/master/assets/captures/search_small.png
+[![Object Detailed View][2][1]]
+Object Detailed View
+
+[![Search View][4][3]]
+Search View
+
 ### About WP-CollectiveAccess
 WP-CollectiveAccess is a wordpress plugin to display collections informations & media from museum or digital archives 
 inside Wordpress, using web services.
