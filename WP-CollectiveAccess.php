@@ -25,13 +25,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once(plugin_dir_path( __FILE__ ) ."lib/virtualthemedpages/Virtual_Themed_Pages_BC.php");
-$vp =  new Virtual_Themed_Pages_BC();
-
-// Including admin page file
+// Requiring admin page file
 require_once(plugin_dir_path( __FILE__ ) ."collectiveaccess_settings.php");
 
-// Including details & search functions
+// Requiring details & search functions
 require_once(plugin_dir_path( __FILE__ ) ."collectiveaccess_object_detail.php");
 require_once(plugin_dir_path( __FILE__ ) ."collectiveaccess_objects_search.php");
 require_once(plugin_dir_path( __FILE__ ) ."collectiveaccess_browse.php");
