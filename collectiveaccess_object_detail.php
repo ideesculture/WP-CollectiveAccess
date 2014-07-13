@@ -6,6 +6,9 @@
  * Time: 15:31
  */
 
+require_once(plugin_dir_path( __FILE__ ) ."lib/virtualthemedpages/Virtual_Themed_Pages_BC.php");
+$vp =  new Virtual_Themed_Pages_BC();
+
 require_once(plugin_dir_path( __FILE__ ) ."lib/cawrappercache/ItemServiceCache.php");
 
 $vp->add('#/collections/object/detail#i', 'collectiveaccess_object_detail');
@@ -47,7 +50,7 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
     $url_base = empty( $options["url_base"] ) ? 'localhost' : $options["url_base"];
     $login = empty($options["login"]) ? 'admin' : $options["login"];
     $password = empty($options["password"]) ? 'admin' : $options["password"];
-    $cache_duration = empty($options["cache_duration"]) ? 3600 : $options["cache_duration"];
+    $cache_duration = $options["cache_duration"];
 
     if ( !empty( $title ) ) { echo $before_title . $title . $after_title; };
 
