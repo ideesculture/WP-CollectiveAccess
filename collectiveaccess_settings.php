@@ -132,6 +132,9 @@ function collectiveaccess_entity_template_input() {
 }
 
 function collectiveaccess_validate_options($input) {
+
+    // TODO : if user, base_url or password is changed, clear the cache.
+
     $valid = array();
     $valid['login'] = preg_replace('/[^a-zA_Z]/','',$input['login']);
     $valid['password'] = preg_replace('/[^a-zA_Z0-9]/','',$input['password']);
