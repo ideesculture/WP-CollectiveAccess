@@ -36,10 +36,15 @@ class SearchServiceCache extends SearchService {
         $db_results = $this->wpdb->get_results($db_query);
 
         // If there's only one result in cache
+        //if (0) {
         if (count($db_results) == 1) {
+
             $db_result = reset($db_results);
             // and if not expired, send it back
-            if (!$db_result->expired) return new ServiceResult(stripslashes($db_result->result));
+            if (!$db_result->expired) {
+                $result = new ServiceResult($db_result->result);
+                return $result;
+            }
         }
         // No valid result & something in cache, clear it
         if(count($db_results) > 0) {
@@ -48,7 +53,6 @@ class SearchServiceCache extends SearchService {
         }
         // Generating a new result
         $result = parent::request();
-
         // caching it
         $db_query = "INSERT INTO {$prefix}collectiveaccess_cache (service, base_url, catable, query, result)"
             ." values (\"{$service}\", \"{$base_url}\", \"{$table}\", \"{$query}\", \"".addslashes(json_encode($result->getRawData(), JSON_UNESCAPED_UNICODE))."\")";
