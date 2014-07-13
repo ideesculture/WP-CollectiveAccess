@@ -5,6 +5,9 @@
  * Date: 05/07/2014
  * Time: 15:31
  */
+require_once(plugin_dir_path( __FILE__ ) ."lib/virtualthemedpages/Virtual_Themed_Pages_BC.php");
+$vp =  new Virtual_Themed_Pages_BC();
+
 
 require_once(plugin_dir_path( __FILE__ ) ."lib/cawrappercache/BrowseServiceCache.php");
 
