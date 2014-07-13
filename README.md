@@ -14,7 +14,7 @@ Display your CollectiveAccess collections inside your Wordpress website.
 
 ### About WP-CollectiveAccess
 WP-CollectiveAccess is a wordpress plugin to display collections informations & media from museum or digital archives 
-inside Wordpress, using web services.
+inside Wordpress, using web services. This plugin is released under [GPL v3 license](https://raw.githubusercontent.com/ideesculture/WP-CollectiveAccess/master/LICENSE).
 
 WP-CollectiveAccess is a project lead by idéesculture, a small french company, involved in CollectiveAccess development 
 through french translation & a dedicated module for Musées de France museums, tiny devs... We provide CollectiveAccess 
