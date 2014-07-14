@@ -61,6 +61,10 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
         $client = new ItemServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"GET",$id);
         $result = $client->request();
         $record = $result->getRawData();
+
+        // Uncomment next line to show detailed object on screen
+        // var_dump($record);die();
+
         if(!isset($record["errors"])) {
             $v->title = $record["preferred_labels"]["fr_FR"][0];
 
@@ -81,8 +85,8 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                         if (is_array($record["representations"])) {
                             foreach($record["representations"] as $representation) {
                                 if (($bundle_parts[1] == "primary" ) && ($representation["is_primary"] == true)) {
-                                    if ($bundle_parts[2] == "urls")
-                                        $template = str_replace("^".$bundle,$representation["urls"]["preview170"],$template);
+                                    if (($bundle_parts[2] == "urls") && ($bundle_parts[3]))
+                                        $template = str_replace("^".$bundle,$representation["urls"][$bundle_parts[3]],$template);
                                 }
                             }
                         }
