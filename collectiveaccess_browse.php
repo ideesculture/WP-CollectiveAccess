@@ -36,15 +36,71 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
     // TODO : do not show anything if no password, send an error message on screen
 
     if ( $url_base ) {
+
+        // Disabling Wordpress HTML sanitization to avoid having <p></p> coming everywhere
+        remove_filter( 'the_content', 'wpautop' );
+
         $client = new BrowseServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"OPTIONS");
-        $options = $client->request();
-        $va_options = $options->getRawData();
-        foreach($va_options as $va_option) {
-            //var_dump($va_option);
-            $facets[] = "<a href=#>".$va_option['label_singular']."</a>";
+
+        // if we have a POST, then we have criterias, so filter facets
+        if(!empty($_POST)) {
+            $client->setRequestBody(array("criteria" => $_POST));
         }
+
+        $client_result = $client->request();
+        $results = $client_result->getRawData();
+        $body = "";
+        $body =
+"<script type='text/javascript'>
+jQuery(document).ready(function(){
+    jQuery('p.facetname').click(function(){
+       jQuery(this).next().slideToggle();
+       jQuery(this).toggleClass('collapsed');
+       return false;
+    });
+});
+</script>";
+        $body .= "<form name='browse_facets' action='{$url}' method='POST'>";
+        foreach($results as $facet_type => $facet_options) {
+            //var_dump($va_option);
+            $body .= "<p style='text-transform: uppercase;' class='facetname' onclick='slideToggle();'>".$facet_options['label_singular']."</p>\n";
+            $body .= "<p class='facetcontent' style='display: none;'>";
+            foreach($facet_options["content"] as $label => $content) {
+                $body .= "<input type='checkbox' name='{$facet_type}[]' value='{$content["id"]}'> {$content["label"]}<br/>\n";
+            }
+            $body .= "</p>";
+            //$facets[] = "<a href=#>".$facet_options['label_singular']."</a>";
+        }
+        $body .= "<input type='submit' value='Browse'/></form><br/>";
         $v->title = "Browse ".$name_plural;
-        $v->body = "<b>facets</b>\n".implode(" - ",$facets);
+        //$v->body = "<b>facets</b>\n".implode(" - ",$facets);
+
+
+        // if we have a POST, then we have criterias, so display results
+        if(!empty($_POST)) {
+            $client = new BrowseServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"GET");
+            $client->setRequestBody(array("criteria" => $_POST));
+
+            $client_result = $client->request();
+            $results = $client_result->getRawData();
+            //var_dump($results);die();
+            if(!isset($results["results"])) {
+                $body .= "<p>No result</p>\n";
+            } else {
+                $body .= "<ul>";
+                foreach($results["results"] as $result) {
+                    $body .= "<li>".$result["display_label"]."</li>";
+                }
+                $body .= "</ul>";
+            }
+        }
+
+        $v->body = $body;
+
+        // If we have submitted facets, fetch the corresponding CA datas
+        if (!empty($_POST)) {
+
+        }
     } else  {
         $v->title = "Error";
         $v->body = "Configuration error";
