@@ -60,29 +60,21 @@ function collectiveaccess_install() {
         deactivate_plugins( basename( __FILE__ ) );
     }
 	if($installed_version != $wpca_version) {
-		$table_name = $wpdb->prefix . "collectiveaccess_cache";
-		$sql = "CREATE TABLE $table_name (
-  id mediumint(9) NOT NULL AUTO_INCREMENT,
-  service tinytext NOT NULL,
-  base_url text NOT NULL,
-  catable tinytext NOT NULL,
-  mode tinytext,
-  query text,
-  time timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  result blob,
-  UNIQUE KEY id (id)
-);";
+
+        $table_name = $wpdb->prefix . "collectiveaccess_cache";
+
+        // for easier reading & maintenance, $sql var is written in conf/db_table_creation.php
+        include(plugin_dir_path( __FILE__ )."conf/db_table_creation.php");
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
 		update_option( "wpca_version", $wpca_version );
 	}
-    $collectiveaccess_options = array(
-        "view" => "grid" ,
-        "food" => "bacon",
-        "mode" => "zombie"
-    );
+
+    // for easier reading & maintenance, default options values are written in conf/default_options_values.php
+    include(plugin_dir_path( __FILE__ )."conf/default_options_values.php");
+
     update_option("collectiveaccess_options", $collectiveaccess_options);
 }
 
@@ -92,3 +84,4 @@ function collectiveaccess_uninstall() {
 		collectiveaccess_install();
 	}
 }
+
