@@ -50,6 +50,7 @@ function collectiveaccess_ajax_getimage()
     if(!$isAjax) die('-1');
 
     $result = collectiveaccess_getpreviewimage($_REQUEST[table], $_REQUEST[id]);
+    if($result == false) die('-1');
     echo json_encode($result);
 
 }
