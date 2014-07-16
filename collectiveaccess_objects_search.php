@@ -90,12 +90,12 @@ figure.gallery-item p {display:none;}
 
         $num_results = (int) count($result_data);
         $num_per_page = 12 ;
-        $pages = floor($num_results / $num_per_page);
+        $pages = ceil($num_results / $num_per_page);
         //var_dump($page);die();
         $vignettes .= "<p>".$num_results." results</p>";
         $i = 1;
         foreach($result_data as $result) {
-            if (floor(($i-1)/$num_per_page) == $page) {
+            if (ceil($i/$num_per_page) == $page) {
                 $vignettes .= "<figure class='gallery-item'> <div class='gallery-icon landscape'> ";
                 $vignettes .= "<a href=\"".get_site_url()."/collections/object/detail/".$result["id"]."\" > \n";
                 $vignettes .= "<div class='collectiveaccess-cropping-image'><img class=\"attachment-thumbnail\" data-table=\"ca_objects\" data-id=\"".$result["id"]."\"/> </span>\n";
@@ -124,7 +124,7 @@ figure.gallery-item p {display:none;}
 
         $title = "Results for ".$query;
         $v->title = $title;
-        $v->body = $vignettes; //   $body.
+        $v->body = $cssAndScript.$vignettes; //   $body.
 
     } elseif (!$url_base) {
         $v->title = "Error";
