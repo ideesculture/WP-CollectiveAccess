@@ -20,6 +20,48 @@ function collectiveaccess_objects_browse($v, $url){
 function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
 {
 	global $wpdb;
+    $cssAndScript =
+"<style>
+figure.gallery-item p {display:none;}
+
+.collectiveaccess-cropping-image {
+    height:170px;
+    width:150px;
+    overflow:hidden;
+    background-color: black;
+    text-align: center;
+    vertical-align: middle;
+    display:table-cell;
+}
+</style>
+<script type='text/javascript'>
+    jQuery(document).ready(function() {
+        jQuery('img.attachment-thumbnail').each(function() {
+            var getimage_table = jQuery(this).data(\"table\");
+            var getimage_id = jQuery(this).data(\"id\");
+            var jquery_this = jQuery(this);
+            jQuery.ajax({
+                type:'POST',
+                dataType: 'text',
+                url:'" . get_site_url() . "/wp-content/plugins/WP-CollectiveAccess/collectiveaccess_ajax_handler.php',
+                data: {
+                    action:'getimage',
+                    table:getimage_table,
+                    id:getimage_id
+                },
+                success:function(response){
+                    if(response != '-1') {
+                        //console.log(response);
+                        jquery_this.attr('src',JSON.parse(response));
+                    } else {
+                        jquery_this.removeAttr('src');
+                    }
+                }
+            });
+        });
+    });
+
+</script>";
 
     $v->template = 'page'; // optional
     $v->subtemplate = 'collections'; // optional
@@ -36,6 +78,26 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
     // TODO : do not show anything if no password, send an error message on screen
 
     if ( $url_base ) {
+
+        // Defaulting to display page 1
+        $page = 1;
+        // If we have a post, we have some criterias passed
+        if(!empty($_POST)) {
+            // We may have some former criterias passed (they are json stringified inside a hidden input in the page, no cookie needed for now)
+            if(isset($_POST["page"])) {
+                $page = (int) $_POST["page"];
+                unset($_POST["page"]);
+            }
+            if(isset($_POST["query"])) {
+                // Insure to have a non empty former query
+                if($_POST["query"] !== "") {
+                    $previous_query = json_decode(stripslashes($_POST["query"]),true);
+                }
+                unset($_POST["query"]);
+                // reinjecting former criterias to last added criterias
+                if (is_array($previous_query)) $_POST = array_merge($_POST,$previous_query);
+            }
+        }
 
         // Disabling Wordpress HTML sanitization to avoid having <p></p> coming everywhere
         remove_filter( 'the_content', 'wpautop' );
@@ -61,6 +123,11 @@ jQuery(document).ready(function(){
 });
 </script>";
         $body .= "<form name='browse_facets' action='{$url}' method='POST'>";
+        if(!empty($_POST)) {
+            $body .= "<input type=hidden size=80 name=query value=\"".htmlentities(json_encode($_POST))."\" />\n";
+            $body .= "<input type=hidden size=80 name=page value=\"{$page}\" />\n";
+        }
+
         foreach($results as $facet_type => $facet_options) {
             //var_dump($va_option);
             $body .= "<p style='text-transform: uppercase;' class='facetname' onclick='slideToggle();'>".$facet_options['label_singular']."</p>\n";
@@ -71,7 +138,7 @@ jQuery(document).ready(function(){
             $body .= "</p>";
             //$facets[] = "<a href=#>".$facet_options['label_singular']."</a>";
         }
-        $body .= "<input type='submit' value='Browse'/></form><br/>";
+        $body .= "<input type='submit' value='Browse'/><br/>";
         $v->title = "Browse ".$name_plural;
         //$v->body = "<b>facets</b>\n".implode(" - ",$facets);
 
@@ -83,19 +150,47 @@ jQuery(document).ready(function(){
 
             $client_result = $client->request();
             $results = $client_result->getRawData();
-            //var_dump($results);die();
+
             if(!isset($results["results"])) {
                 $body .= "<p>No result</p>\n";
             } else {
+
+                $num_results = (int) count($results["results"]);
+                $num_per_page = 12 ;
+                $pages = ceil($num_results / $num_per_page);
+
                 $body .= "<ul>";
+                $i=1;
                 foreach($results["results"] as $result) {
-                    $body .= "<li>".$result["display_label"]."</li>";
+                    if (ceil($i/$num_per_page) == $page) {
+                        $vignettes .= "<figure class='gallery-item'> <div class='gallery-icon landscape'> ";
+                        $vignettes .= "<a href=\"".get_site_url()."/collections/object/detail/".$result["id"]."\" > \n";
+                        $vignettes .= "<div class='collectiveaccess-cropping-image'><img class=\"attachment-thumbnail\" data-table=\"ca_objects\" data-id=\"".$result["id"]."\"/> </span>\n";
+                        $vignettes .= "</a> </div><figcaption class='wp-caption-text gallery-caption'>";
+                        $vignettes .= $result["display_label"].($result["idno"]? " <small>(".$result["idno"].")</small>":"");
+                        $vignettes .= "</figcaption></figure>";
+
+                        //$body .= "<li>" . $result["display_label"] . "</li>";
+                    }
+                    $i++;
                 }
                 $body .= "</ul>";
             }
+
+            // Page navigation
+            $vignettes .= "<div class=\"page-links\"><span class=\"page-links-title\">Pages:</span>\n";
+            // Inserting hidden form for page navigation, keeping query
+            $vignettes .=
+                "</FORM>";
+            // Inserting page links
+            for ($i = 1; $i <= $pages; $i++) {
+                $vignettes .= "<a href='#' onclick=\"document.forms['browse_facets'].page.value = $i;document.forms['browse_facets'].submit();\"><span>".$i."</span></a>\n";
+            }
+            $vignettes .= "</div>";
         }
 
-        $v->body = $body;
+
+        $v->body = $cssAndScript.$body.$vignettes;
 
         // If we have submitted facets, fetch the corresponding CA datas
         if (!empty($_POST)) {
