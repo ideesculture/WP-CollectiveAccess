@@ -35,6 +35,13 @@ figure.gallery-item p {display:none;}
 }
 </style>
 <script type='text/javascript'>
+    jQuery(document).ready(function(){
+        jQuery('p.facetname').click(function(){
+           jQuery(this).next().slideToggle();
+           jQuery(this).toggleClass('collapsed');
+           return false;
+        });
+    });
     jQuery(document).ready(function() {
         jQuery('img.attachment-thumbnail').each(function() {
             var getimage_table = jQuery(this).data(\"table\");
@@ -112,30 +119,30 @@ figure.gallery-item p {display:none;}
         $client_result = $client->request();
         $results = $client_result->getRawData();
         $body = "";
-        $body =
-"<script type='text/javascript'>
-jQuery(document).ready(function(){
-    jQuery('p.facetname').click(function(){
-       jQuery(this).next().slideToggle();
-       jQuery(this).toggleClass('collapsed');
-       return false;
-    });
-});
-</script>";
         $body .= "<form name='browse_facets' action='{$url}' method='POST'>";
         if(!empty($_POST)) {
             $body .= "<input type=hidden size=80 name=query value=\"".htmlentities(json_encode($_POST))."\" />\n";
             $body .= "<input type=hidden size=80 name=page value=\"{$page}\" />\n";
         }
-
+        //var_dump($results);die();
         foreach($results as $facet_type => $facet_options) {
-            //var_dump($va_option);
             $body .= "<p style='text-transform: uppercase;' class='facetname' onclick='slideToggle();'>".$facet_options['label_singular']."</p>\n";
-            $body .= "<p class='facetcontent' style='display: none;'>";
+            $body .= "<div style='display: none;'>";
             foreach($facet_options["content"] as $label => $content) {
-                $body .= "<input type='checkbox' name='{$facet_type}[]' value='{$content["id"]}'> {$content["label"]}<br/>\n";
+                if(isset($content["id"])) {
+                    $body .= "<input type='checkbox' name='{$facet_type}[]' value='{$content["id"]}'> {$content["label"]}<br/>\n";    
+                } else {
+                    // No ID defined, we have an intermediate grouping array
+                    $body .= "<p class='facetname'><b>{$label}</b></p>";
+                    $body .= "<p class='facetcontent' style='display: none;'>";
+                    foreach($content as $subcontent) {
+//                        var_dump($subcontent["label"]);die();
+                        $body .= "<input style='display:inline-box;border:1px solid black;' type='checkbox' name='{$facet_type}[]' value='". $subcontent["id"]."'> ". $subcontent["label"] ."<br/>\n";    
+                    }
+                    $body .= "</p>";
+                }
             }
-            $body .= "</p>";
+            $body .= "</div>";
             //$facets[] = "<a href=#>".$facet_options['label_singular']."</a>";
         }
         $body .= "<input type='submit' value='Browse'/><br/>";
