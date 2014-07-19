@@ -16,7 +16,8 @@ class ItemServiceCache extends ItemService {
 		$this->wpdb = $wpdb;
 		$this->duration = $duration;
 		$this->service = "ItemService";
-		$this->base_url = explode("@",$ps_base_url)[1];
+		$base_url_components = explode("@",$ps_base_url);
+		$this->base_url = $base_url_components[1];
 		$this->table = $ps_table;
 		$this->mode = $ps_mode;
 		$this->id = $pn_id;
