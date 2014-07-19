@@ -33,14 +33,56 @@ figure.gallery-item p {display:none;}
     vertical-align: middle;
     display:table-cell;
 }
+.collapsed {
+}
+p.facetname {
+    border-top:1px solid lightgray;
+    margin-bottom:10px;
+    margin-top:20px;
+}
+p.facetname:first-child {
+    border:none;
+}
+.facetname, .subfacetname {
+    cursor:pointer;    
+}
+.subfacet {
+    margin-right:10px;
+}
+.subfacet.collapsed:before {
+    content : '+';
+}
+.subfacet:before {
+    content : '-';
+    background-color: #24890d;
+    border: 0;
+    border-radius: 2px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 4px 2px 4px;
+    margin-right:3px;
+    text-transform: uppercase;
+    width:25px;
+    display:inline-box;
+    min-width:25px;
+}
+
 </style>
 <script type='text/javascript'>
     jQuery(document).ready(function(){
         jQuery('p.facetname').click(function(){
            jQuery(this).next().slideToggle();
            jQuery(this).toggleClass('collapsed');
-           return false;
+           return true;
         });
+        jQuery('span.subfacetname').click(function(){
+            var facetref = jQuery(this).data().facettype + '-' + jQuery(this).data().facetname;
+            console.log(facetref);
+            jQuery('p.subfacetcontent.' + facetref).slideToggle();
+            jQuery(this).toggleClass('collapsed');
+            return true;
+        });        
     });
     jQuery(document).ready(function() {
         jQuery('img.attachment-thumbnail').each(function() {
@@ -88,72 +130,123 @@ figure.gallery-item p {display:none;}
 
         // Defaulting to display page 1
         $page = 1;
-        // If we have a post, we have some criterias passed
-        if(!empty($_POST)) {
-            // We may have some former criterias passed (they are json stringified inside a hidden input in the page, no cookie needed for now)
-            if(isset($_POST["page"])) {
-                $page = (int) $_POST["page"];
-                unset($_POST["page"]);
-            }
-            if(isset($_POST["query"])) {
-                // Insure to have a non empty former query
-                if($_POST["query"] !== "") {
-                    $previous_query = json_decode(stripslashes($_POST["query"]),true);
-                }
-                unset($_POST["query"]);
-                // reinjecting former criterias to last added criterias
-                if (is_array($previous_query)) $_POST = array_merge($_POST,$previous_query);
-            }
-        }
+        $body = "";
 
         // Disabling Wordpress HTML sanitization to avoid having <p></p> coming everywhere
         remove_filter( 'the_content', 'wpautop' );
 
+        // If we have a post, we have some criterias passed
+        if(!empty($_POST)) {
+            // We may have some former criterias passed (they are json stringified inside a hidden input in the page, no cookie needed for now)
+            $uncleaned_criterias = $_POST;
+            
+            if(isset($uncleaned_criterias["page"])) {
+                $page = (int) $uncleaned_criterias["page"];
+                unset($uncleaned_criterias["page"]);
+            }
+            
+            if($uncleaned_criterias["removecriteria"] !== "") {
+                $removecriteria = explode('__',$uncleaned_criterias["removecriteria"]);
+                unset($uncleaned_criterias["removecriteria"]);
+            }
+            // Insure to have a non empty former query
+            if($uncleaned_criterias["query"] !== "" && $uncleaned_criterias["query"] !== "null") {
+                $previous_query = json_decode(stripslashes($uncleaned_criterias["query"]),true);
+            }
+            // Removing instruction to remove criteria from the post
+            unset($uncleaned_criterias["query"]);
+            unset($uncleaned_criterias["removecriteria"]);
+
+            // reinjecting former criterias to last added criterias
+            
+            //var_dump($uncleaned_criterias);die();
+            if (is_array($previous_query)) 
+                $uncleaned_criterias = array_merge($uncleaned_criterias,$previous_query);
+
+
+            //$criterias = $_POST;
+            if(isset($removecriteria)) {
+                // Removing criteria
+                unset($uncleaned_criterias[$removecriteria[0]]);
+            }
+
+            foreach($uncleaned_criterias as $ref => $uncleaned_criteria) {
+                foreach($uncleaned_criteria as $uncleaned_criteria_value) {
+                    $cleaned_criteria_value = explode("__",$uncleaned_criteria_value);
+                    $criterias[$ref][] = $cleaned_criteria_value[0];
+                    $criterias_names[$ref][] = $cleaned_criteria_value[1];
+                }
+            }
+        }
+
+        if(($criterias)) {
+            $body .= '<div class="entry-meta"><span class="tag-links">';
+            foreach ($criterias as $criteria_key => $criteria) {
+                foreach($criteria as $criteria_value_key => $criteria_value) {
+                    $body .= "<a style='text-decoration:none;' onclick=\"document.forms['browse_facets'].removecriteria.value = '{$criteria_key}__{$criteria_value}';\" >".
+                        $criterias_names[$criteria_key][$criteria_value_key].
+                        " <u>x</u>".
+                        "</a>";
+                }
+            }
+            $body .= '</span></div>';
+            $body .= "<div><a class=button href={$url}>Remove all criterias</a></div>";
+            //die();
+        }
+
+
         $client = new BrowseServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"OPTIONS");
 
         // if we have a POST, then we have criterias, so filter facets
-        if(!empty($_POST)) {
-            $client->setRequestBody(array("criteria" => $_POST));
+        if(!empty($criterias)) {
+            $client->setRequestBody(array("criteria" => $criterias));
         }
 
         $client_result = $client->request();
         $results = $client_result->getRawData();
-        $body = "";
         $body .= "<form name='browse_facets' action='{$url}' method='POST'>";
-        if(!empty($_POST)) {
-            $body .= "<input type=hidden size=80 name=query value=\"".htmlentities(json_encode($_POST))."\" />\n";
+        if(!empty($criterias)) {
+            $body .= "<input type=hidden size=80 name=query value=\"".htmlentities(json_encode($uncleaned_criterias))."\" />\n";
             $body .= "<input type=hidden size=80 name=page value=\"{$page}\" />\n";
+            $body .= "<input type=hidden size=80 name=removecriteria />\n";
         }
         //var_dump($results);die();
         foreach($results as $facet_type => $facet_options) {
-            $body .= "<p style='text-transform: uppercase;' class='facetname' onclick='slideToggle();'>".$facet_options['label_singular']."</p>\n";
-            $body .= "<div style='display: none;'>";
+            $body .= "<p style='text-transform: uppercase;' class='facetname'>".$facet_options['label_singular']."</p>\n";
+            $body .= "<div class='facetcontent collapsed' style='display: none;'>";
+            $subfacets = "";
             foreach($facet_options["content"] as $label => $content) {
                 if(isset($content["id"])) {
-                    $body .= "<input type='checkbox' name='{$facet_type}[]' value='{$content["id"]}'> {$content["label"]}<br/>\n";    
+                    $body .= "<input type='checkbox' name='{$facet_type}[]' value='{$content["id"]}__{$content["label"]}'> {$content["label"]}<br/>\n";    
                 } else {
                     // No ID defined, we have an intermediate grouping array
-                    $body .= "<p class='facetname'><b>{$label}</b></p>";
-                    $body .= "<p class='facetcontent' style='display: none;'>";
+                    $content_id = $content["id"];
+                    $body .= "<span class='subfacet subfacetname collapsed' data-facetname='{$label}' data-facettype='{$facet_type}'><b>{$label}</b></span> ";
+                    $subfacets .= "<p class='subfacetcontent {$facet_type}-{$label} collapsed' style='display: none;'>";
                     foreach($content as $subcontent) {
 //                        var_dump($subcontent["label"]);die();
-                        $body .= "<input style='display:inline-box;border:1px solid black;' type='checkbox' name='{$facet_type}[]' value='". $subcontent["id"]."'> ". $subcontent["label"] ."<br/>\n";    
+                        $subfacets .= "<input style='display:inline-box;border:1px solid black;' type='checkbox' name='{$facet_type}[]' value='". $subcontent["id"]."__".$subcontent["label"]."'> ". $subcontent["label"] ."<br/>\n";    
                     }
-                    $body .= "</p>";
+                    $subfacets .= "</p>";
                 }
             }
+            $body .= $subfacets;
             $body .= "</div>";
             //$facets[] = "<a href=#>".$facet_options['label_singular']."</a>";
         }
-        $body .= "<input type='submit' value='Browse'/><br/>";
-        $v->title = "Browse ".$name_plural;
+        // Display Browse button only if we still have facets to display
+        if ($results && !$criterias) 
+            $body .= "<input type='submit' value='Browse'/><br/>";
+        elseif ($results)
+            $body .= "<input type='submit' value='Filter'/><br/>";
+
         //$v->body = "<b>facets</b>\n".implode(" - ",$facets);
 
 
         // if we have a POST, then we have criterias, so display results
-        if(!empty($_POST)) {
+        if(!empty($criterias)) {
             $client = new BrowseServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"GET");
-            $client->setRequestBody(array("criteria" => $_POST));
+            $client->setRequestBody(array("criteria" => $criterias));
 
             $client_result = $client->request();
             $results = $client_result->getRawData();
@@ -196,13 +289,9 @@ figure.gallery-item p {display:none;}
             $vignettes .= "</div>";
         }
 
-
+        $v->title = "Browse ".$name_plural;
         $v->body = $cssAndScript.$body.$vignettes;
 
-        // If we have submitted facets, fetch the corresponding CA datas
-        if (!empty($_POST)) {
-
-        }
     } else  {
         $v->title = "Error";
         $v->body = "Configuration error";
