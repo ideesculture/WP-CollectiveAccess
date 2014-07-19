@@ -85,7 +85,8 @@ figure.gallery-item p {display:none;}
 
         $client = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,"ca_objects",$query);
         $request = $client->request();
-        $result_data = $request->getRawData()["results"];
+        $result_data = $request->getRawData();
+        $result_data = $result_data["results"];
         //var_dump($result_data);die();
 
         $num_results = (int) count($result_data);
