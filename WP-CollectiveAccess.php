@@ -28,6 +28,12 @@
 // Requiring admin page file
 require_once(plugin_dir_path( __FILE__ ) ."collectiveaccess_settings.php");
 
+// Requiring idéesculture simpleview class
+require_once(plugin_dir_path( __FILE__ ) ."lib/simpleview/simpleview_idc.php");
+// The idéesculture simpleview class requires a place where the views are stored, if empty 
+// or not defined, they will be load from current dir.
+define("SIMPLEVIEW_IDC_DIR",plugin_dir_path( __FILE__ )."views/");
+
 // Requiring details & search functions
 require_once(plugin_dir_path( __FILE__ ) ."collectiveaccess_object_detail.php");
 require_once(plugin_dir_path( __FILE__ ) ."collectiveaccess_objects_search.php");

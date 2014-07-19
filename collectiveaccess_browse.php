@@ -20,97 +20,6 @@ function collectiveaccess_objects_browse($v, $url){
 function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
 {
 	global $wpdb;
-    $cssAndScript =
-"<style>
-figure.gallery-item p {display:none;}
-
-.collectiveaccess-cropping-image {
-    height:170px;
-    width:150px;
-    overflow:hidden;
-    background-color: black;
-    text-align: center;
-    vertical-align: middle;
-    display:table-cell;
-}
-.collapsed {
-}
-p.facetname {
-    border-top:1px solid lightgray;
-    margin-bottom:10px;
-    margin-top:20px;
-}
-p.facetname:first-child {
-    border:none;
-}
-.facetname, .subfacetname {
-    cursor:pointer;    
-}
-.subfacet {
-    margin-right:10px;
-}
-.subfacet.collapsed:before {
-    content : '+';
-}
-.subfacet:before {
-    content : '-';
-    background-color: #24890d;
-    border: 0;
-    border-radius: 2px;
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 2px 4px 2px 4px;
-    margin-right:3px;
-    text-transform: uppercase;
-    width:25px;
-    display:inline-box;
-    min-width:25px;
-}
-
-</style>
-<script type='text/javascript'>
-    jQuery(document).ready(function(){
-        jQuery('p.facetname').click(function(){
-           jQuery(this).next().slideToggle();
-           jQuery(this).toggleClass('collapsed');
-           return true;
-        });
-        jQuery('span.subfacetname').click(function(){
-            var facetref = jQuery(this).data().facettype + '-' + jQuery(this).data().facetname;
-            console.log(facetref);
-            jQuery('p.subfacetcontent.' + facetref).slideToggle();
-            jQuery(this).toggleClass('collapsed');
-            return true;
-        });        
-    });
-    jQuery(document).ready(function() {
-        jQuery('img.attachment-thumbnail').each(function() {
-            var getimage_table = jQuery(this).data(\"table\");
-            var getimage_id = jQuery(this).data(\"id\");
-            var jquery_this = jQuery(this);
-            jQuery.ajax({
-                type:'POST',
-                dataType: 'text',
-                url:'" . get_site_url() . "/wp-content/plugins/WP-CollectiveAccess/collectiveaccess_ajax_handler.php',
-                data: {
-                    action:'getimage',
-                    table:getimage_table,
-                    id:getimage_id
-                },
-                success:function(response){
-                    if(response != '-1') {
-                        //console.log(response);
-                        jquery_this.attr('src',JSON.parse(response));
-                    } else {
-                        jquery_this.removeAttr('src');
-                    }
-                }
-            });
-        });
-    });
-
-</script>";
 
     $v->template = 'page'; // optional
     $v->subtemplate = 'collections'; // optional
@@ -180,18 +89,19 @@ p.facetname:first-child {
         }
 
         if(($criterias)) {
-            $body .= '<div class="entry-meta"><span class="tag-links">';
+            $i=0;
             foreach ($criterias as $criteria_key => $criteria) {
                 foreach($criteria as $criteria_value_key => $criteria_value) {
-                    $body .= "<a style='text-decoration:none;' onclick=\"document.forms['browse_facets'].removecriteria.value = '{$criteria_key}__{$criteria_value}';\" >".
-                        $criterias_names[$criteria_key][$criteria_value_key].
-                        " <u>x</u>".
-                        "</a>";
+                    $criterias_for_subview[$i]["key"] = $criteria_key;
+                    $criterias_for_subview[$i]["value"] = $criteria_value;
+                    $criterias_for_subview[$i]["name"] = $criterias_names[$criteria_key][$criteria_value_key];
+                    $i++;
                 }
             }
-            $body .= '</span></div>';
-            $body .= "<div><a class=button href={$url}>Remove all criterias</a></div>";
-            //die();
+            // Remove criterias subview
+            $removecriterias_subview = new simpleview_idc("collectiveaccess_browse_removecriterias", basename(get_template_directory()));
+            $removecriterias_subview->setVar("criterias",$criterias_for_subview);
+            $removecriterias = $removecriterias_subview->render();
         }
 
 
@@ -259,38 +169,36 @@ p.facetname:first-child {
                 $num_per_page = 12 ;
                 $pages = ceil($num_results / $num_per_page);
 
-                $body .= "<ul>";
                 $i=1;
                 foreach($results["results"] as $result) {
                     if (ceil($i/$num_per_page) == $page) {
-                        $vignettes .= "<figure class='gallery-item'> <div class='gallery-icon landscape'> ";
-                        $vignettes .= "<a href=\"".get_site_url()."/collections/object/detail/".$result["id"]."\" > \n";
-                        $vignettes .= "<div class='collectiveaccess-cropping-image'><img class=\"attachment-thumbnail\" data-table=\"ca_objects\" data-id=\"".$result["id"]."\"/> </span>\n";
-                        $vignettes .= "</a> </div><figcaption class='wp-caption-text gallery-caption'>";
-                        $vignettes .= $result["display_label"].($result["idno"]? " <small>(".$result["idno"].")</small>":"");
-                        $vignettes .= "</figcaption></figure>";
-
-                        //$body .= "<li>" . $result["display_label"] . "</li>";
+                        // Creating subviews for each thumbnail
+                        $thumbnail_subview = new simpleview_idc("collectiveaccess_thumbnail", basename(get_template_directory()));
+                        $thumbnail_subview->setVar("id",$result["id"]);
+                        $thumbnail_subview->setVar("display_label",$result["display_label"]);
+                        $thumbnail_subview->setVar("idno",$result["idno"]);
+                        $thumbnail_subview->setVar("ca_table",$ca_table);
+                        $thumbnails .= $thumbnail_subview->render();
                     }
                     $i++;
                 }
-                $body .= "</ul>";
             }
 
             // Page navigation
-            $vignettes .= "<div class=\"page-links\"><span class=\"page-links-title\">Pages:</span>\n";
-            // Inserting hidden form for page navigation, keeping query
-            $vignettes .=
-                "</FORM>";
-            // Inserting page links
-            for ($i = 1; $i <= $pages; $i++) {
-                $vignettes .= "<a href='#' onclick=\"document.forms['browse_facets'].page.value = $i;document.forms['browse_facets'].submit();\"><span>".$i."</span></a>\n";
-            }
-            $vignettes .= "</div>";
+            $pagination_subview = new simpleview_idc("collectiveaccess_browse_pagination", basename(get_template_directory()));
+            $pagination_subview->setVar("pages",$pages);
+            $pagination = $pagination_subview->render();
         }
 
         $v->title = "Browse ".$name_plural;
-        $v->body = $cssAndScript.$body.$vignettes;
+
+        // Creating the view, the theme directory name is used as a prefix to allow theme-specific subviews
+        $content_view = new simpleview_idc("collectiveaccess_browse", basename(get_template_directory()));
+        $content_view->setVar("glurb","guzuguzu");
+        $content_view->setVar("thumbnails",$thumbnails);
+        $content_view->setVar("pagination",$pagination);
+        $content_view->setVar("removecriterias",$removecriterias);        
+        $v->body = $body.$vignettes.$content_view->render();
 
     } else  {
         $v->title = "Error";
