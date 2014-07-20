@@ -33,22 +33,27 @@
 				<span class='subfacet subfacetname collapsed' data-facetname='<?php print $label; ?>' data-facettype='<?php print $facet_type; ?>'>
 					<b><?php print $label; ?></b>
 				</span>
-	            <p class='subfacetcontent <?php print $facet_type."-".$label; ?> collapsed' style='display: none;'>
-<?php
+<?php				
+	            $subfacets .= "<p class='subfacetcontent {$facet_type}-{$label} collapsed' style='display: none;'>";
 	            foreach($content as $subcontent) :
-?>
-					<input style='display:inline-box;border:1px solid black;' type='checkbox' name='<?php print $facet_type; ?>[]' value='<?php print $subcontent["id"]."__".$subcontent["label"]; ?>' /> <?php print $subcontent["label"] ?><br/>
-<?php
+	            	$subfacets .= "<input style='display:inline-box;border:1px solid black;' type='checkbox' 
+	            		name='".$facet_type."[]' value='".$subcontent["id"]."__".$subcontent["label"]."' /> ".$subcontent["label"]."<br/>";
 				endforeach;
-?>
-	            </p>
-<?php
+				$subfacets .= "</p>";
+
 			endif;
         endforeach;
+
+        print $subfacets;
 ?>
 		</div>
 <?php
     endforeach;
-	// Display Browse as a title for button only if we still have facets to display, else call it Filter
+
+    // Display Browse button only if we still have facets to display. If results shown, call it Filter instead.
+    if(count($facets)) :
 ?>
 		<input type='submit' value='<?php print ($have_criterias ? "Filter" : "Browse" ); ?>'/><br/>
+<?php
+	endif;
+?>
