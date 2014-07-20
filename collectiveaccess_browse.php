@@ -24,6 +24,7 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
     $v->template = 'page'; // optional
     $v->subtemplate = 'collections'; // optional
 
+    $wordpress_theme = basename(get_template_directory());
     $options = get_option('collectiveaccess_options');
 
     $url_base = empty( $options[url_base] ) ? 'localhost' : $options[url_base];
@@ -86,6 +87,7 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
                     $criterias_names[$ref][] = $cleaned_criteria_value[1];
                 }
             }
+            $json_uncleaned_criterias = htmlentities(json_encode($uncleaned_criterias));
         }
 
         if(($criterias)) {
@@ -113,42 +115,16 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
         }
 
         $client_result = $client->request();
-        $results = $client_result->getRawData();
-        $body .= "<form name='browse_facets' action='{$url}' method='POST'>";
-        if(!empty($criterias)) {
-            $body .= "<input type=hidden size=80 name=query value=\"".htmlentities(json_encode($uncleaned_criterias))."\" />\n";
-            $body .= "<input type=hidden size=80 name=page value=\"{$page}\" />\n";
-            $body .= "<input type=hidden size=80 name=removecriteria />\n";
-        }
-        //var_dump($results);die();
-        foreach($results as $facet_type => $facet_options) {
-            $body .= "<p style='text-transform: uppercase;' class='facetname'>".$facet_options['label_singular']."</p>\n";
-            $body .= "<div class='facetcontent collapsed' style='display: none;'>";
-            $subfacets = "";
-            foreach($facet_options["content"] as $label => $content) {
-                if(isset($content["id"])) {
-                    $body .= "<input type='checkbox' name='{$facet_type}[]' value='{$content["id"]}__{$content["label"]}'> {$content["label"]}<br/>\n";    
-                } else {
-                    // No ID defined, we have an intermediate grouping array
-                    $content_id = $content["id"];
-                    $body .= "<span class='subfacet subfacetname collapsed' data-facetname='{$label}' data-facettype='{$facet_type}'><b>{$label}</b></span> ";
-                    $subfacets .= "<p class='subfacetcontent {$facet_type}-{$label} collapsed' style='display: none;'>";
-                    foreach($content as $subcontent) {
-//                        var_dump($subcontent["label"]);die();
-                        $subfacets .= "<input style='display:inline-box;border:1px solid black;' type='checkbox' name='{$facet_type}[]' value='". $subcontent["id"]."__".$subcontent["label"]."'> ". $subcontent["label"] ."<br/>\n";    
-                    }
-                    $subfacets .= "</p>";
-                }
-            }
-            $body .= $subfacets;
-            $body .= "</div>";
-            //$facets[] = "<a href=#>".$facet_options['label_singular']."</a>";
-        }
-        // Display Browse button only if we still have facets to display
-        if ($results && !$criterias) 
-            $body .= "<input type='submit' value='Browse'/><br/>";
-        elseif ($results)
-            $body .= "<input type='submit' value='Filter'/><br/>";
+        $facets = $client_result->getRawData();
+
+        // Facets subview
+        $facets_subview = new simpleview_idc("collectiveaccess_browse_facets", $wordpress_theme);
+        $facets_subview->setVar("facets",$facets);
+        $facets_subview->setVar("have_criterias",(count($criterias)>0));
+        $facets_subview->setVar("json_uncleaned_criterias",$json_uncleaned_criterias);
+        $facets_subview->setVar("url",$url);
+        $facets_subview->setVar("page",$page);
+        $facets_content = $facets_subview->render();
 
         //$v->body = "<b>facets</b>\n".implode(" - ",$facets);
 
@@ -161,10 +137,7 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
             $client_result = $client->request();
             $results = $client_result->getRawData();
 
-            if(!isset($results["results"])) {
-                $body .= "<p>No result</p>\n";
-            } else {
-
+            if(isset($results["results"])) {
                 $num_results = (int) count($results["results"]);
                 $num_per_page = 12 ;
                 $pages = ceil($num_results / $num_per_page);
@@ -173,7 +146,7 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
                 foreach($results["results"] as $result) {
                     if (ceil($i/$num_per_page) == $page) {
                         // Creating subviews for each thumbnail
-                        $thumbnail_subview = new simpleview_idc("collectiveaccess_thumbnail", basename(get_template_directory()));
+                        $thumbnail_subview = new simpleview_idc("collectiveaccess_thumbnail", $wordpress_theme);
                         $thumbnail_subview->setVar("id",$result["id"]);
                         $thumbnail_subview->setVar("display_label",$result["display_label"]);
                         $thumbnail_subview->setVar("idno",$result["idno"]);
@@ -185,7 +158,7 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
             }
 
             // Page navigation
-            $pagination_subview = new simpleview_idc("collectiveaccess_browse_pagination", basename(get_template_directory()));
+            $pagination_subview = new simpleview_idc("collectiveaccess_browse_pagination", $wordpress_theme);
             $pagination_subview->setVar("pages",$pages);
             $pagination = $pagination_subview->render();
         }
@@ -193,11 +166,12 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
         $v->title = "Browse ".$name_plural;
 
         // Creating the view, the theme directory name is used as a prefix to allow theme-specific subviews
-        $content_view = new simpleview_idc("collectiveaccess_browse", basename(get_template_directory()));
-        $content_view->setVar("glurb","guzuguzu");
+        $content_view = new simpleview_idc("collectiveaccess_browse", $wordpress_theme);
         $content_view->setVar("thumbnails",$thumbnails);
         $content_view->setVar("pagination",$pagination);
         $content_view->setVar("removecriterias",$removecriterias);        
+        $content_view->setVar("facets_content",$facets_content);
+        $content_view->setVar("have_results",(count($results)>0));        
         $v->body = $body.$vignettes.$content_view->render();
 
     } else  {
