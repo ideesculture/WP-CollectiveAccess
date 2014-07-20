@@ -4,7 +4,7 @@ Donate link: http://www.ideesculture.com/
 Tags: CollectiveAccess, museum, digital archives, media, tilepic, webservices
 Requires at least: 3.9
 Tested up to: 3.9
-Stable tag: 0.1
+Stable tag: 0.1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -63,11 +63,11 @@ Please take a look at README.md in the same directory. Don't hesitate to contact
 
 == Screenshots ==
 
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
+1. Detail view
+
+2. Search View
+
+3. Browse View
 
 == Upgrade Notice ==
 
@@ -79,3 +79,7 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 = 0.1 =
 
 - first working version
+
+= 0.1.1 =
+
+- supporting views & subviews for easier customisation (take a look at /views & /views/local)
