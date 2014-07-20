@@ -158,8 +158,9 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
             }
 
             // Page navigation
-            $pagination_subview = new simpleview_idc("collectiveaccess_browse_pagination", $wordpress_theme);
+            $pagination_subview = new simpleview_idc("collectiveaccess_pagination", $wordpress_theme);
             $pagination_subview->setVar("pages",$pages);
+            $pagination_subview->setVar("formname","browse_facets");
             $pagination = $pagination_subview->render();
         }
 
