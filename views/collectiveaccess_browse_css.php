@@ -43,3 +43,25 @@ p.facetname:first-child {
     display:inline-box;
     min-width:25px;
 }
+.remove-criterias a {
+    text-decoration:none;
+    cursor:pointer;
+}
+.remove-criterias a:hover,
+.remove-criterias a:hover:before {
+    text-decoration: line-through;
+}
+
+.reset-criterias a {
+    background: #24890d;
+    color: #fff;
+    text-shadow: none;
+    padding-bottom: 3px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 3px
+}
+.reset-criterias a:hover{
+    background-color: rgb(65, 166, 42);
+    color:#fff;
+}
