@@ -37,7 +37,7 @@
 <?php
 	            foreach($content as $subcontent) :
 ?>
-					<input style='display:inline-box;border:1px solid black;' type='checkbox' name='<?php print $facet_type; ?>[]' value='<?php print $subcontent["id"]."__".$subcontent["label"]; ?>' /><?php print $subcontent["label"] ?><br/>
+					<input style='display:inline-box;border:1px solid black;' type='checkbox' name='<?php print $facet_type; ?>[]' value='<?php print $subcontent["id"]."__".$subcontent["label"]; ?>' /> <?php print $subcontent["label"] ?><br/>
 <?php
 				endforeach;
 ?>
