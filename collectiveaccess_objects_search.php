@@ -17,50 +17,6 @@ function collectiveaccess_search_results($v, $url)
 {
     global $wpdb;
 
-    // for more comprehensive readability, CSS & JS insertion are included here, PHP function code is after
-    $cssAndScript =
-"<style>
-figure.gallery-item p {display:none;}
-
-.collectiveaccess-cropping-image {
-    height:170px;
-    width:150px;
-    overflow:hidden;
-    background-color: black;
-    text-align: center;
-    vertical-align: middle;
-    display:table-cell;
-}
-</style>
-<script type='text/javascript'>
-    jQuery(document).ready(function() {
-        jQuery('img.attachment-thumbnail').each(function() {
-            var getimage_table = jQuery(this).data(\"table\");
-            var getimage_id = jQuery(this).data(\"id\");
-            var jquery_this = jQuery(this);
-            jQuery.ajax({
-                type:'POST',
-                dataType: 'text',
-                url:'" . get_site_url() . "/wp-content/plugins/WP-CollectiveAccess/collectiveaccess_ajax_handler.php',
-                data: {
-                    action:'getimage',
-                    table:getimage_table,
-                    id:getimage_id
-                },
-                success:function(response){
-                    if(response != '-1') {
-                        //console.log(response);
-                        jquery_this.attr('src',JSON.parse(response));
-                    } else {
-                        jquery_this.removeAttr('src');
-                    }
-                }
-            });
-        });
-    });
-
-</script>";
-
     // getting query from post or get
     if (!($query=$_POST["query"])) $query=$_GET["query"];
     if (!($page=$_POST["page"])) $page=1;
@@ -117,15 +73,18 @@ figure.gallery-item p {display:none;}
             "<input type=\"hidden\" name=\"query\" value=\"".$query."\">".
             "<input type=\"hidden\" name=\"page\" id=\"page\" value=\"1\">".
             "</FORM>";
-        // Inserting page links
-        for ($i = 1; $i <= $pages; $i++) {
-            $vignettes .= "<a href='#' onclick=\"document.forms['page'].page.value = $i;document.forms['page'].submit();\"><span>".$i."</span></a>\n";
-        }
-        $vignettes .= "</div>";
+
+        // Page navigation
+        $pagination_subview = new simpleview_idc("collectiveaccess_pagination", $wordpress_theme);
+        $pagination_subview->setVar("pages",$pages);
+        $pagination_subview->setVar("formname","page");
+        $pagination = $pagination_subview->render();
 
         $title = "Results for ".$query;
         $v->title = $title;
-        $v->body = $cssAndScript.$vignettes; //   $body.
+
+        $content_view = new simpleview_idc("collectiveaccess_search", $wordpress_theme);
+        $v->body = $vignettes.$content_view->render().$pagination;
 
     } elseif (!$url_base) {
         $v->title = "Error";
