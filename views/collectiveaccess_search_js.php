@@ -1,0 +1,1 @@
+<?php include('collectiveaccess_js.php'); ?>
