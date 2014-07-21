@@ -11,9 +11,13 @@ $vp =  new Virtual_Themed_Pages_BC();
 require_once(plugin_dir_path( __FILE__ ) ."lib/cawrappercache/SearchServiceCache.php");
 
 
-$vp->add('#/collections/objects/search#i', 'collectiveaccess_search_results');
+$vp->add('#/collections/objects/search#i', 'collectiveaccess_objects_search');
 
-function collectiveaccess_search_results($v, $url)
+function collectiveaccess_objects_search($v, $url){
+    collectiveaccess_search("objects","ca_objects",$v, $url);
+}
+
+function collectiveaccess_search($name_plural,$ca_table,$v, $url)
 {
     global $wpdb;
 
@@ -25,7 +29,6 @@ function collectiveaccess_search_results($v, $url)
     $v->subtemplate = 'collections'; // optional
 
     $options = get_option('collectiveaccess_options');
-    //var_dump($options);die();
 
     $url_base = empty( $options["url_base"] ) ? 'localhost' : $options["url_base"];
     $login = empty($options["login"]) ? 'admin' : $options["login"];
@@ -43,36 +46,23 @@ function collectiveaccess_search_results($v, $url)
         $request = $client->request();
         $result_data = $request->getRawData();
         $result_data = $result_data["results"];
-        //var_dump($result_data);die();
 
         $num_results = (int) count($result_data);
         $num_per_page = 12 ;
         $pages = ceil($num_results / $num_per_page);
         //var_dump($page);die();
-        $vignettes .= "<p>".$num_results." results</p>";
         $i = 1;
         foreach($result_data as $result) {
             if (ceil($i/$num_per_page) == $page) {
-                $vignettes .= "<figure class='gallery-item'> <div class='gallery-icon landscape'> ";
-                $vignettes .= "<a href=\"".get_site_url()."/collections/object/detail/".$result["id"]."\" > \n";
-                $vignettes .= "<div class='collectiveaccess-cropping-image'><img class=\"attachment-thumbnail\" data-table=\"ca_objects\" data-id=\"".$result["id"]."\"/> </span>\n";
-                $vignettes .= "</a> </div><figcaption class='wp-caption-text gallery-caption'>";
-                $vignettes .= $result["display_label"].($result["idno"]? " <small>(".$result["idno"].")</small>":"");
-                $vignettes .= "</figcaption></figure>";
+                $thumbnail_subview = new simpleview_idc("collectiveaccess_thumbnail", $wordpress_theme);
+                $thumbnail_subview->setVar("id",$result["id"]);
+                $thumbnail_subview->setVar("display_label",$result["display_label"]);
+                $thumbnail_subview->setVar("idno",$result["idno"]);
+                $thumbnail_subview->setVar("ca_table",$ca_table);
+                $thumbnails .= $thumbnail_subview->render();
             }
             $i++;
         }
-
-        // Inserting encapsulation div
-        $vignettes ="<div id='gallery-1' class='gallery galleryid-555 gallery-columns-3 gallery-size-thumbnail'>".$vignettes."</div>\n";
-
-        // Page navigation
-        $vignettes .= "<div class=\"page-links\"><span class=\"page-links-title\">Pages:</span>\n";
-        // Inserting hidden form for page navigation, keeping query
-        $vignettes .= "<FORM name=\"page\" action=\"".get_site_url()."/collections/objects/search\" method=\"post\">\n".
-            "<input type=\"hidden\" name=\"query\" value=\"".$query."\">".
-            "<input type=\"hidden\" name=\"page\" id=\"page\" value=\"1\">".
-            "</FORM>";
 
         // Page navigation
         $pagination_subview = new simpleview_idc("collectiveaccess_pagination", $wordpress_theme);
@@ -80,11 +70,13 @@ function collectiveaccess_search_results($v, $url)
         $pagination_subview->setVar("formname","page");
         $pagination = $pagination_subview->render();
 
-        $title = "Results for ".$query;
-        $v->title = $title;
+        $v->title = "Results for ".$query;
 
         $content_view = new simpleview_idc("collectiveaccess_search", $wordpress_theme);
-        $v->body = $vignettes.$content_view->render().$pagination;
+        $content_view->setVar("num_results",$num_results);
+        $content_view->setVar("thumbnails",$thumbnails);
+        $content_view->setVar("pagination",$pagination);
+        $v->body = $content_view->render();
 
     } elseif (!$url_base) {
         $v->title = "Error";
