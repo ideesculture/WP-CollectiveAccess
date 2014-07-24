@@ -53,7 +53,7 @@
     // Display Browse button only if we still have facets to display. If results shown, call it Filter instead.
     if(count($facets)) :
 ?>
-		<input type='submit' value='<?php print ($have_criterias ? "Filter" : "Browse" ); ?>'/><br/>
+		<input type='submit' value='<?php print ($have_criterias ? __("Filter", 'collectiveaccess') : __("Browse", 'collectiveaccess') ); ?>'/><br/>
 <?php
 	endif;
 ?>

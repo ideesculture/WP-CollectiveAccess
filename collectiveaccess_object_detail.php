@@ -29,6 +29,30 @@ function collectiveaccess_collection_detail($v, $url){
     collectiveaccess_detail("collection","ca_collections",$v, $url);
 }
 
+function tileviewer_js_registration() {
+    global $wp_scripts;
+
+    // tell WordPress to load jQuery UI tabs
+    wp_enqueue_script('jquery-ui-tabs');
+ 
+    // get registered script object for jquery-ui
+    $ui = $wp_scripts->query('jquery-ui-core');
+ 
+    // tell WordPress to load the Smoothness theme from Google CDN
+    $protocol = is_ssl() ? 'https' : 'http';
+    $url = "$protocol://ajax.googleapis.com/ajax/libs/jqueryui/{$ui->ver}/themes/smoothness/jquery-ui.min.css";
+    wp_enqueue_style('jquery-ui-smoothness', $url, false, null);
+
+    wp_register_style('jquery-tileviewer', plugins_url('js/jquery.tileviewer.css',__FILE__ ));
+    wp_enqueue_style('jquery.tileviewer');
+    wp_enqueue_script('jquery-hotkeys');
+    wp_register_script( 'jquery-mousewheel', plugins_url('js/jquery.mousewheel.js',__FILE__ ));
+    wp_enqueue_script('jquery-mousewheel');    
+    wp_register_script( 'jquery-tileviewer', plugins_url('js/jquery.tileviewer.js',__FILE__ ));
+    wp_enqueue_script('jquery-tileviewer');
+}
+add_action( 'wp_enqueue_scripts','tileviewer_js_registration');
+
 function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
 {
 	global $wpdb;
@@ -61,6 +85,9 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
         $client = new ItemServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"GET",$id);
         $result = $client->request();
         $record = $result->getRawData();
+
+        // Disabling Wordpress HTML sanitization to avoid having <p></p> coming everywhere
+        remove_filter( 'the_content', 'wpautop' );
 
         // Uncomment next line to show detailed object on screen
         // var_dump($record);die();
@@ -128,8 +155,7 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                         break;
                 }
             }
-            //var_dump($record);
-            //die();
+
             if ($record["representations"]) {
                 // Extracting representation info from CA
                 $representation = reset($record["representations"]);
@@ -138,11 +164,7 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                 $r_record = $r_client->request()->getRawData();
                 $r_large_infos = $r_record["media"]["value"]["large"];
                 $r_large_url = "http://".$url_base."/media/musee/".$r_large_infos["VOLUME"]."/".$r_large_infos["HASH"]."/".$r_large_infos["MAGIC"]."_".$r_large_infos["FILENAME"];
-                //var_dump($r_large_url);
-                //die();
-                //
-                // Generating body
-                //$v->body .= "<p><img src=\"".$representation[urls][preview170]."\"></p>";
+
                 $wp_ca_thumbnail = "<div style=\"max-height:600px;min-height:400px;width:100%;position:relative;overflow:hidden;\"><img style=\"position:absolute;width:100%;\" src=\"".$r_large_url."\"></div>";
                 add_filter('post_thumbnail_html',
                     function($html, $post_id, $post_thumbnail_id, $size, $attr) use ($wp_ca_thumbnail) {
@@ -151,8 +173,11 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                     },
                     99, 5);
             }
+
+            $content_view = new simpleview_idc("collectiveaccess_detail", $wordpress_theme);
             // template insertion
-            $v->body .= $template;
+            $content_view->setVar("template",$template);
+            $v->body = $content_view->render();
         } else {
             $v->title = "Error";
             foreach($record["errors"] as $error) {

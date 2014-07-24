@@ -3,7 +3,7 @@
     $formname = $this->getVar("formname");
 ?>
 </form>
-<div class="page-links"><span class="page-links-title">Pages:</span>
+<div class="page-links"><span class="page-links-title"><?php _e("Pages:","collectiveaccess") ?></span>
 <?php
     // Loop through pages
     for ($i = 1; $i <= $pages; $i++) : ?>

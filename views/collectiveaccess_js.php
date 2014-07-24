@@ -20,7 +20,7 @@ jQuery(document).ready(function() {
         jQuery.ajax({
             type:'POST',
             dataType: 'text',
-            url:'<?php print get_site_url(); ?>/wp-content/plugins/WP-CollectiveAccess/collectiveaccess_ajax_handler.php',
+            url:'<?php print plugins_url( 'collectiveaccess_ajax_handler.php' , __FILE__ ); ?>/wp-content/plugins/WP-CollectiveAccess/',
             data: {
                 action:'getimage',
                 table:getimage_table,

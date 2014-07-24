@@ -1,0 +1,153 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WP-CollectiveAccess v0.4.9\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2014-07-24 20:38:44+0000\n"
+"Last-Translator: admin <contact@ideesculture.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: CSL v1.x\n"
+"X-Poedit-Language: Italian\n"
+"X-Poedit-Country: ITALY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-Bookmarks: \n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Textdomain-Support: yes"
+
+#: WP-CollectiveAccess.php:106
+#@ collectiveaccess
+msgid "Could not load the localization file: "
+msgstr ""
+
+#: WP-CollectiveAccess.php:120
+#@ default
+msgid "Settings"
+msgstr ""
+
+#: collectiveaccess_objects_search.php:100
+#@ collectiveaccess
+msgid "Results for "
+msgstr ""
+
+#: collectiveaccess_objects_search.php:110
+#: collectiveaccess_objects_search.php:113
+#@ collectiveaccess
+msgid "Error"
+msgstr ""
+
+#: collectiveaccess_objects_search.php:111
+#@ collectiveaccess
+msgid "Configuration error, no url_base defined. Please check your settings."
+msgstr ""
+
+#: collectiveaccess_objects_search.php:114
+#@ collectiveaccess
+msgid "No query sent."
+msgstr ""
+
+#: WP-CollectiveAccess.php:106
+#@ collectiveaccess
+msgid "Problem with localization files : "
+msgstr ""
+
+#: views/collectiveaccess_browse_facets_html.php:56
+#@ collectiveaccess
+msgid "Filter"
+msgstr ""
+
+#: views/collectiveaccess_browse_facets_html.php:56
+#@ collectiveaccess
+msgid "Browse"
+msgstr ""
+
+#: views/collectiveaccess_browse_removecriterias_html.php:10
+#@ collectiveaccess
+msgid "Remove this criteria"
+msgstr ""
+
+#: views/collectiveaccess_browse_removecriterias_html.php:18
+#@ collectiveaccess
+msgid "Reset criterias"
+msgstr ""
+
+#: views/collectiveaccess_pagination_html.php:6
+#@ collectiveaccess
+msgid "Pages:"
+msgstr ""
+
+#: widget_browse_links.php:24
+#@ collectiveaccess
+msgid "Display browse collections links"
+msgstr ""
+
+#: widget_browse_links.php:33
+#@ CollectiveAccess
+msgid "Browse collections"
+msgstr ""
+
+#: widget_browse_links.php:58
+#@ collectiveaccess
+msgid "Objects"
+msgstr ""
+
+#: widget_browse_links.php:59
+#@ collectiveaccess
+msgid "Entities"
+msgstr ""
+
+#: widget_browse_links.php:60
+#@ collectiveaccess
+msgid "Collections"
+msgstr ""
+
+#: widget_browse_links.php:61
+#@ collectiveaccess
+msgid "Places"
+msgstr ""
+
+#: widget_browse_links.php:62
+#@ collectiveaccess
+msgid "Occurrences"
+msgstr ""
+
+#: widget_random_object.php:24
+#@ collectiveaccess
+msgid "Display a random object from CollectiveAccess"
+msgstr ""
+
+#: widget_random_object.php:27
+#@ collectiveaccess
+msgid "CollectiveAccess Random object"
+msgstr ""
+
+#: widget_random_object.php:42
+#@ collectiveaccess
+msgid "Title: "
+msgstr ""
+
+#: widget_random_object.php:43
+#@ collectiveaccess
+msgid "CollectiveAccess URL base: "
+msgstr ""
+
+#: widget_random_object.php:44
+#@ collectiveaccess
+msgid "Object ID to display: "
+msgstr ""
+
+#: widget_search_form.php:22
+#@ collectiveaccess
+msgid "Display a CollectiveAccess search form"
+msgstr ""
+
+#: widget_search_form.php:52
+#@ collectiveacess
+msgid "Submit"
+msgstr ""
+

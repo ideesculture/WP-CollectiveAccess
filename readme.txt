@@ -76,10 +76,34 @@ Please take a look at README.md in the same directory. Don't hesitate to contact
 
 == Changelog ==
 
-= 0.1 =
+= 0.5 =
 
-- first working version
+(planned for the 30/07/2014)
+
+- Ability to customize
+	- page title (for search, browse & detail view) ; 
+	- override the default view by a custom view for a single request (post or get $view with a string, for exemple allow to display with an intro the content of a set) ;
+	- through templates via admin settings ;
+	- create customized views inside views/local
+	- page header image through CSS
+- Records displayed : objects, entities, places, events, collections
+- Internationalization & translations : english (default), french (fr_FR), italian (it_IT)
+- TilePic viewer (this requires to have a working Pawtucket installation & to install a php script acting as a proxy, see __URL_TO_COME__ for more info)
+
+= 0.4.9 =
+
+- development phase for 0.5, planned for end of july
+
+= 0.1.2 =
+
+- expanding views to each part of the plugin
 
 = 0.1.1 =
 
 - supporting views & subviews for easier customisation (take a look at /views & /views/local)
+
+= 0.1 =
+
+- first working version
+
+

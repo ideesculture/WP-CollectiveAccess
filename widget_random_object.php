@@ -21,10 +21,10 @@ class random_object_widget extends WP_Widget {
 
         $widget_ops = array(
             'classname' => 'random_object_widget_class',
-            'description' => 'Display a random object from CollectiveAccess'
+            'description' => __('Display a random object from CollectiveAccess','collectiveaccess')
         );
 
-        $this->WP_Widget( 'random_object_widget', 'CollectiveAccess Random object', $widget_ops );
+        $this->WP_Widget( 'random_object_widget', __('CollectiveAccess Random object','collectiveaccess'), $widget_ops );
     }
 
     //build the widget settings form
@@ -39,9 +39,9 @@ class random_object_widget extends WP_Widget {
         $ca_url_base = $instance['ca_url_base'];
         $id = $instance["id"];
         ?>
-        <p>Title: <input class="widefat" name="<?php echo $this->get_field_name( 'title' ); ?>"  type="text" value="<?php echo esc_attr( $title ); ?>" /></p>
-        <p>CollectiveAccess URL base: <input class="widefat" name="<?php echo $this->get_field_name( 'ca_url_base' ); ?>"  type="text" value="<?php echo esc_attr( $ca_url_base ); ?>" /></p>
-        <p>Object ID to display: <input class="widefat" name="<?php echo $this->get_field_name( 'id' ); ?>"  type="text" value="<?php echo esc_attr( $id); ?>" /></p>
+        <p><?php _e("Title: ","collectiveaccess"); ?><input class="widefat" name="<?php echo $this->get_field_name( 'title' ); ?>"  type="text" value="<?php echo esc_attr( $title ); ?>" /></p>
+        <p><?php _e("CollectiveAccess URL base: ","collectiveaccess"); ?><input class="widefat" name="<?php echo $this->get_field_name( 'ca_url_base' ); ?>"  type="text" value="<?php echo esc_attr( $ca_url_base ); ?>" /></p>
+        <p><?php _e("Object ID to display: ","collectiveaccess"); ?><input class="widefat" name="<?php echo $this->get_field_name( 'id' ); ?>"  type="text" value="<?php echo esc_attr( $id); ?>" /></p>
     <?php
     }
 

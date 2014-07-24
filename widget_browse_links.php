@@ -21,7 +21,7 @@ class browse_links_widget extends WP_Widget {
 
         $widget_ops = array(
             'classname' => 'browse_links_widget_class',
-            'description' => 'Display browse collections links'
+            'description' => __('Display browse collections links','collectiveaccess')
         );
 
         $this->WP_Widget( 'browse_links_widget', 'CollectiveAccess browse collections links', $widget_ops );
@@ -30,7 +30,7 @@ class browse_links_widget extends WP_Widget {
     //build the widget settings form
     function form($instance) {
         $defaults = array(
-            'title' => 'Browse collections',
+            'title' => __('Browse collections','CollectiveAccess'),
         );
         // TODO : add checkboxes to select which collections parts are browsable
         $instance = wp_parse_args( (array) $instance, $defaults );
@@ -55,10 +55,11 @@ class browse_links_widget extends WP_Widget {
 
         echo $before_widget;
         $widget_body = "<ul>";
-        $widget_body .= "<li><a href='".get_site_url()."/collections/objects/browse'>Objects</a></li>";
-        $widget_body .= "<li><a href='".get_site_url()."/collections/entities/browse'>Entities</a></li>";
-        $widget_body .= "<li><a href='".get_site_url()."/collections/collections/browse'>Collections</a></li>";
-        $widget_body .= "<li><a href='".get_site_url()."/collections/places/browse'>Places</a></li>";
+        $widget_body .= "<li><a href='".get_site_url()."/collections/objects/browse'>".__("Objects","collectiveaccess")."</a></li>";
+        $widget_body .= "<li><a href='".get_site_url()."/collections/entities/browse'>".__("Entities","collectiveaccess")."</a></li>";
+        $widget_body .= "<li><a href='".get_site_url()."/collections/collections/browse'>".__("Collections","collectiveaccess")."</a></li>";
+        $widget_body .= "<li><a href='".get_site_url()."/collections/places/browse'>".__("Places","collectiveaccess")."</a></li>";
+        $widget_body .= "<li><a href='".get_site_url()."/collections/occurrences/browse'>".__("Occurrences","collectiveaccess")."</a></li>";
         $widget_body .= "</ul>";
 
         if ( !empty( $title ) ) { echo $before_title . $title . $after_title; };

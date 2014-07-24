@@ -3,7 +3,7 @@
  * Plugin Name: WP-CollectiveAccess
  * Plugin URI: http://github.com/ideesculture/wp-collectiveaccess
  * Description: Display CollectiveAccess data & medias in Wordpress
- * Version: 0.1
+ * Version: 0.4.9
  * Author: Gautier Michelin, idéesculture.
  * Funding : Project originally funded by Pro-Memoria
  * Author URI: http://www.ideesculture.com
@@ -28,6 +28,9 @@
 // Requiring admin page file
 require_once(plugin_dir_path( __FILE__ ) ."collectiveaccess_settings.php");
 
+// Add a link on the plugin page to the setting
+add_filter('plugin_action_links', 'collectiveaccess_add_settings_link', 10, 2 );
+
 // Requiring idéesculture simpleview class
 require_once(plugin_dir_path( __FILE__ ) ."lib/simpleview/simpleview_idc.php");
 // The idéesculture simpleview class requires a place where the views are stored, if empty 
@@ -48,9 +51,11 @@ require_once(plugin_dir_path( __FILE__ ) ."widget_browse_links.php");
 register_activation_hook( __FILE__, "collectiveaccess_install" );
 //add_action( 'plugins_loaded', 'collectiveaccess_update_db_check' );
 
-global $wpca_version;
-$wpca_version = "0.1";
+// i18n
+add_action('init', 'collectiveaccess_i18n_init');
 
+global $wpca_version;
+$wpca_version = "0.2";
 
 /**
  *
@@ -91,3 +96,29 @@ function collectiveaccess_uninstall() {
 	}
 }
 
+function collectiveaccess_i18n_init() {
+	// Textdomain
+	$domain = 'collectiveaccess';
+
+    $path = dirname(plugin_basename( __FILE__ )) . '/lang/';
+    $loaded = load_plugin_textdomain( 'collectiveaccess', false, $path);
+    if ($_GET['page'] == basename(__FILE__) && !$loaded) {          
+        echo '<div class="error">'.__('Problem with localization files : ','collectiveaccess') . __('Could not load the localization file: ' . $path, $domain) . '</div>';
+        return;
+    } 
+} 
+
+/**
+ * add a settings link to the the plugin on the plugin page
+ * @param array $links
+ * @param string $file
+ * @return array
+ */
+function collectiveaccess_add_settings_link( $links, $file ) {
+
+	if ( $file == plugin_basename( __FILE__ ) ) {
+		$settings_link = '<a href="options-general.php?page=collectiveaccess">' . __('Settings' )/*get this from WP core*/ . '</a>';
+		array_unshift( $links, $settings_link );
+	}
+	return $links;
+}

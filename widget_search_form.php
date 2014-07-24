@@ -19,7 +19,7 @@ class search_form_widget extends WP_Widget {
 
         $widget_ops = array(
             'classname' => 'search_form_widget_class',
-            'description' => 'Display a CollectiveAccess search form'
+            'description' => __('Display a CollectiveAccess search form','collectiveaccess')
         );
 
         $this->WP_Widget( 'search_form_widget', 'CollectiveAccess Search form', $widget_ops );
@@ -49,7 +49,7 @@ class search_form_widget extends WP_Widget {
         echo $before_widget;
         $widget_body =
             "<FORM action=\"".get_site_url()."/collections/objects/search\" method=\"post\">\n".
-                "<input type=\"text\" name=\"query\"> <input type=\"submit\" value=\"Submit\">\n".
+                "<input type=\"text\" name=\"query\"> <input type=\"submit\" value=\"".__("Submit",'collectiveacess')."\">\n".
             "</FORM>";
 
         if ( !empty( $title ) ) { echo $before_title . $title . $after_title; };

@@ -12,10 +12,27 @@ $vp =  new Virtual_Themed_Pages_BC();
 require_once(plugin_dir_path( __FILE__ ) ."lib/cawrappercache/BrowseServiceCache.php");
 
 $vp->add('#/collections/objects/browse#i', 'collectiveaccess_objects_browse');
+$vp->add('#/collections/entities/browse#i', 'collectiveaccess_entities_browse');
+$vp->add('#/collections/places/browse#i', 'collectiveaccess_places_browse');
+$vp->add('#/collections/occurrences/browse#i', 'collectiveaccess_occurrences_browse');
+$vp->add('#/collections/collections/browse#i', 'collectiveaccess_collections_browse');
 
 function collectiveaccess_objects_browse($v, $url){
     collectiveaccess_browse("objects","ca_objects",$v, $url);
 }
+function collectiveaccess_entities_browse($v, $url){
+    collectiveaccess_browse("entities","ca_entities",$v, $url);
+}
+function collectiveaccess_places_browse($v, $url){
+    collectiveaccess_browse("places","ca_places",$v, $url);
+}
+function collectiveaccess_occurrences_browse($v, $url){
+    collectiveaccess_browse("occurrences","ca_occurrences",$v, $url);
+}
+function collectiveaccess_collections_browse($v, $url){
+    collectiveaccess_browse("collections","ca_collections",$v, $url);
+}
+
 
 function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
 {
