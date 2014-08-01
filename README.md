@@ -111,7 +111,7 @@ We would like to cite the following projects whose code, fonts or graphics are i
 	- page header image through CSS
 - Records displayed : objects, entities, places, events, collections
 - Internationalization & translations : english (default), french (fr_FR), italian (it_IT)
-- TilePic viewer (this requires to have a working Pawtucket installation & to install a php script acting as a proxy, see __URL_TO_COME__ for more info)
+- TilePic viewer (this requires to have a working Pawtucket installation, see __URL_TO_COME__ for more info)
 
 = 0.4.9 =
 
