@@ -102,14 +102,14 @@ We would like to cite the following projects whose code, fonts or graphics are i
 = 0.5 =
 
 (planned for the 30/07/2014)
-- [ ] Customization : page title (for search, browse & detail view) ; 
-- [ ] Customization : override the default view by a custom view for a single request (post or get $view with a string, for exemple allow to display with an intro the content of a set) ;
+- [x] Customization : page title (for search, browse & detail view) ; 
+- [x] Customization : override the default view by a custom view for a single request (post or get $view with a string, for exemple allow to display with an intro the content of a set) ;
 - [x] Customization : through templates via admin settings ;
 - [x] Customization : create customized views inside views/local
-- [ ] Customization : page header image through CSS
+- [x] Customization : page header image through CSS
 - [ ] Records displayed : objects, entities, places, events, collections
-- [X] Internationalization & translations : english (default), french (fr_FR), italian (it_IT)
-- [X] TilePic viewer (this requires to have a working Pawtucket installation, see __URL_TO_COME__ for more info)
+- [x] Internationalization & translations : english (default), french (fr_FR), italian (it_IT)
+- [x] TilePic viewer (this requires to have a working Pawtucket installation, see __URL_TO_COME__ for more info)
 
 = 0.4.9 =
 
