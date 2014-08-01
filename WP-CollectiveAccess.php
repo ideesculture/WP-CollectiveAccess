@@ -3,7 +3,7 @@
  * Plugin Name: WP-CollectiveAccess
  * Plugin URI: http://github.com/ideesculture/wp-collectiveaccess
  * Description: Display CollectiveAccess data & medias in Wordpress
- * Version: 0.4.9
+ * Version: 0.5.0
  * Author: Gautier Michelin, idéesculture.
  * Funding : Project originally funded by Pro-Memoria
  * Author URI: http://www.ideesculture.com
@@ -55,8 +55,15 @@ register_activation_hook( __FILE__, "collectiveaccess_install" );
 add_action('init', 'collectiveaccess_i18n_init');
 
 global $wpca_version;
-$wpca_version = "0.2";
+$wpca_version = "0.5.0";
 
+define("WP_CA_MAIN_FILE",__FILE__);
+define("WP_CA_DIR",__DIR__."/");
+define("WP_CA_VIEWS_DIR",__DIR__."/views/");
+define("WP_CA_CONF_DIR",__DIR__."/conf/");
+define("WP_CA_ASSETS_DIR",__DIR__."/assets/");
+define("WP_CA_LIB_DIR",__DIR__."/lib/");
+define("WP_CA_JS_DIR",__DIR__."/js/");
 /**
  *
  */
