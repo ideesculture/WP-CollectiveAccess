@@ -18,19 +18,20 @@ class browse_links_widget extends WP_Widget {
 
     //process the new widget
     function browse_links_widget() {
-
+        $description = __('Display browse collections links','collectiveaccess');
         $widget_ops = array(
             'classname' => 'browse_links_widget_class',
-            'description' => __('Display browse collections links','collectiveaccess')
+            'description' => $description
         );
-
-        $this->WP_Widget( 'browse_links_widget', 'CollectiveAccess browse collections links', $widget_ops );
+        $title = __('CollectiveAccess browse collections links',"collectiveaccess");
+        $this->WP_Widget( 'browse_links_widget', $title, $widget_ops );
     }
 
     //build the widget settings form
     function form($instance) {
+        $title = __('Browse collections','collectiveaccess');
         $defaults = array(
-            'title' => __('Browse collections','CollectiveAccess'),
+            'title' => $title,
         );
         // TODO : add checkboxes to select which collections parts are browsable
         $instance = wp_parse_args( (array) $instance, $defaults );
