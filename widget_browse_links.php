@@ -31,13 +31,13 @@ class browse_links_widget extends WP_Widget {
     function form($instance) {
         $title = __('Browse collections','collectiveaccess');
         $defaults = array(
-            'title' => $title,
+            'title' => $title
         );
         // TODO : add checkboxes to select which collections parts are browsable
         $instance = wp_parse_args( (array) $instance, $defaults );
         $title = $instance['title'];
         ?>
-        <p>Title: <input class="widefat" name="<?php echo $this->get_field_name( 'title' ); ?>"  type="text" value="<?php echo esc_attr( $title ); ?>" /></p>
+        <p><?php _e('Title:','collectiveaccess');?> <input class="widefat" name="<?php echo $this->get_field_name( 'title' ); ?>"  type="text" value="<?php echo esc_attr( $title ); ?>" /></p>
     <?php
     }
 
@@ -52,15 +52,15 @@ class browse_links_widget extends WP_Widget {
     function widget($args, $instance) {
         extract($args);
 
-        $title = (!empty($instance['title']) ? $instance['title'] : '');
+        $title = (!empty($instance['title']) ? $instance['title'] : __('Browse collections','collectiveaccess'));
 
         echo $before_widget;
         $widget_body = "<ul>";
         $widget_body .= "<li><a href='".get_site_url()."/collections/objects/browse'>".__("Objects","collectiveaccess")."</a></li>";
         $widget_body .= "<li><a href='".get_site_url()."/collections/entities/browse'>".__("Entities","collectiveaccess")."</a></li>";
-        $widget_body .= "<li><a href='".get_site_url()."/collections/collections/browse'>".__("Collections","collectiveaccess")."</a></li>";
-        $widget_body .= "<li><a href='".get_site_url()."/collections/places/browse'>".__("Places","collectiveaccess")."</a></li>";
         $widget_body .= "<li><a href='".get_site_url()."/collections/occurrences/browse'>".__("Occurrences","collectiveaccess")."</a></li>";
+        $widget_body .= "<li><a href='".get_site_url()."/collections/places/browse'>".__("Places","collectiveaccess")."</a></li>";
+        $widget_body .= "<li><a href='".get_site_url()."/collections/collections/browse'>".__("Collections","collectiveaccess")."</a></li>";
         $widget_body .= "</ul>";
 
         if ( !empty( $title ) ) { echo $before_title . $title . $after_title; };
