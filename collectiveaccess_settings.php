@@ -44,9 +44,15 @@ function collectiveaccess_admin_init() {
         'collectiveaccess');
     add_settings_field('collectiveaccess_object_template',__('Object details template',"collectiveaccess"),'collectiveaccess_object_template_input',
         'collectiveaccess','collectiveaccess_templates');
-    add_settings_field('collectiveaccess_object_bundles',__('Object bundles',"collectiveaccess"),'collectiveaccess_object_bundles_input',
-        'collectiveaccess','collectiveaccess_templates');
+//    add_settings_field('collectiveaccess_object_bundles',__('Object bundles',"collectiveaccess"),'collectiveaccess_object_bundles_input',
+//        'collectiveaccess','collectiveaccess_templates');
     add_settings_field('collectiveaccess_entity_template',__('Entitie details template',"collectiveaccess"),'collectiveaccess_entity_template_input',
+        'collectiveaccess','collectiveaccess_templates');
+    add_settings_field('collectiveaccess_place_template',__('Place details template',"collectiveaccess"),'collectiveaccess_place_template_input',
+        'collectiveaccess','collectiveaccess_templates');
+    add_settings_field('collectiveaccess_occurrence_template',__('Occurrence details template',"collectiveaccess"),'collectiveaccess_occurrence_template_input',
+        'collectiveaccess','collectiveaccess_templates');
+    add_settings_field('collectiveaccess_collection_template',__('Collection details template',"collectiveaccess"),'collectiveaccess_collection_template_input',
         'collectiveaccess','collectiveaccess_templates');
 }
 
@@ -65,16 +71,6 @@ function collectiveaccess_url_base_input() {
     // get option 'login' value from the database
     $options = get_option('collectiveaccess_options');
     $url_base = $options['url_base'];
-    //var_dump($url_base);die();
-    // echo the field
-    echo "<input id='url_base' name='collectiveaccess_options[url_base]' type='text' value='$url_base' />";
-    echo "<p class='description'>".__('Define here the full URL to service.php inside your CollectiveAccess Providence installation.',"collectiveaccess")."</p>";
-}
-
-function collectiveaccess_media_dir_input() {
-    // get option 'login' value from the database
-    $options = get_option('collectiveaccess_options');
-    $media_dir = $options['media_dir'];
     //var_dump($url_base);die();
     // echo the field
     echo "<input id='url_base' name='collectiveaccess_options[url_base]' type='text' value='$url_base' />";
@@ -137,6 +133,30 @@ function collectiveaccess_entity_template_input() {
     $entity_template = $options['entity_template'];
     echo "<textarea rows='12' cols='50' id='entity_template' name='collectiveaccess_options[entity_template]'>";
     echo $entity_template;
+    echo "</textarea>";
+}
+
+function collectiveaccess_place_template_input() {
+    $options = get_option('collectiveaccess_options');
+    $place_template = $options['place_template'];
+    echo "<textarea rows='12' cols='50' id='place_template' name='collectiveaccess_options[place_template]'>";
+    echo $place_template;
+    echo "</textarea>";
+}
+
+function collectiveaccess_occurrence_template_input() {
+    $options = get_option('collectiveaccess_options');
+    $occurrence_template = $options['occurrence_template'];
+    echo "<textarea rows='12' cols='50' id='occurrence_template' name='collectiveaccess_options[occurrence_template]'>";
+    echo $occurrence_template;
+    echo "</textarea>";
+}
+
+function collectiveaccess_collection_template_input() {
+    $options = get_option('collectiveaccess_options');
+    $collection_template = $options['collection_template'];
+    echo "<textarea rows='12' cols='50' id='collection_template' name='collectiveaccess_options[collection_template]'>";
+    echo $collection_template;
     echo "</textarea>";
 }
 
