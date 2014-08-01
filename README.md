@@ -33,11 +33,11 @@ partner institutions in North America and Europe with projects in 5 continents.
 
 ### Where to find last version of WP-CollectiveAccess version ?
 
-This github repository stays the main place to look at : https://github.com/ideesculture/WP-CollectiveAccess
+The plugin has a page on wordpress.org plugins : http://wordpress.org/plugins/wp-collectiveaccess/
 
-I've asked for an entry inside WordPress plugin listing, when granted it will be at : http://wordpress.org/plugins/wp-collectiveaccess/
+The wordpress.org is the main channel of distribution, but the developement is made on github.
 
-It may take a while as Wordpress has 134 plugins (sic) to validate before this one.
+The github repository stays the main place to have the last-last-last-version at : https://github.com/ideesculture/WP-CollectiveAccess
 
 ## Installation
 
