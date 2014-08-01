@@ -34,6 +34,14 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
 	global $wpdb;
     global $wp_ca_thumbnail;
 
+    // getting title to overwrite default by post or get
+    if (!($title=$_POST["title"])) {
+        $title=$_GET["title"];
+    }
+    // getting view name to replace collectiveaccess_search
+    if (!($view=$_POST["view"])) {
+        if (!($view=$_GET["view"])) $view = "";
+    }
     // extract an id from the URL
     $id = 'none';
     if (preg_match('#'.$name_singular.'/detail/(\d+)#', $url, $m))
@@ -52,8 +60,6 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
     $password = empty($options["password"]) ? 'admin' : $options["password"];
     $cache_duration = $options["cache_duration"];
 
-    if ( !empty( $title ) ) { echo $before_title . $title . $after_title; };
-
     // TODO : do not show anything if no password, send an error message on screen
 
     if ( $url_base && ($id > 0)) {
@@ -69,7 +75,11 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
         // var_dump($record);die();
 
         if(!isset($record["errors"])) {
-            $v->title = $record["preferred_labels"]["fr_FR"][0];
+            if (isset($title)) {
+                $v->title = $title;
+            } else {
+                $v->title = $record["preferred_labels"]["fr_FR"][0];
+            }
 
             $template = $options[$name_singular."_template"];
             // matching all bundle placements inside the template
@@ -171,8 +181,7 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                     </a>
                 [/caption]".$template;
             }
-
-            $content_view = new simpleview_idc("collectiveaccess_detail", $wordpress_theme);
+            $content_view = new simpleview_idc(($view ? $view : "collectiveaccess_detail"), $wordpress_theme);
             // template insertion
             $content_view->setVar("template",$template);
             if(isset($r_tilepic_url)) {
