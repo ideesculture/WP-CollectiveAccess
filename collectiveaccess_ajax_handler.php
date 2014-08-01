@@ -39,8 +39,6 @@ $allowed_actions = array(
     'getimage'
 );
 
-
-
 $test = add_action('collectiveaccess_ajax_getimage', 'collectiveaccess_ajax_getimage');
 
 function collectiveaccess_ajax_getimage()
