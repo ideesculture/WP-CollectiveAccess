@@ -49,9 +49,10 @@ function collectiveaccess_search($name_plural,$ca_table,$v, $url)
         if (!($view=$_GET["view"])) $view = null;
     }
     // getting header image to replace default-featured-image
-    if (!($view=$_POST["headerimage"])) {
-        if (!($view=$_GET["headerimage"])) $headerimage = null;
+    if (!($headerimage=$_POST["headerimage"])) {
+        if (!($headerimage=$_GET["headerimage"])) $headerimage = null;
     }
+    var
     if (!($page=$_POST["page"])) $page=1;
 
     $v->template = 'page'; // optional
