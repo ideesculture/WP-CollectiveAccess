@@ -3,8 +3,9 @@
     $tpc_image_url = $this->getVar('tilepic_image_url');
     $tpc_height = $this->getVar('tilepic_height');
     $tpc_width = $this->getVar('tilepic_width');
+    $tpc_layers = $this->getVar('tilepic_layers');
     $tpc_remoteviewer_url = $this->getVar('tilepic_remoteviewer_url');
-    $url = $tilepicphp_url."?tpc=".urlencode($tpc_image_url)."&viewer=".urlencode($tpc_remoteviewer_url)."&height=".$tpc_height."&width=".$tpc_width;
+    $url = $tilepicphp_url."?tpc=".urlencode($tpc_image_url)."&viewer=".urlencode($tpc_remoteviewer_url)."&height=".$tpc_height."&width=".$tpc_width."&layers=".$tpc_layers;
 ?>
 
 jQuery(document).ready(function(){

@@ -2,16 +2,13 @@
 	$base_url = dirname($_SERVER['REQUEST_URI']);
 	$tilepic_icon_url = $base_url."/assets/images";
 	
-	// defaulting to an image for now
-	$tilepic_tpc = "http://paw.calendar.dev/media/collectiveaccess/tilepics/0/15176_ca_object_representations_media_57_tilepic.tpc";
-	$tilepic_viewer_url = "http://paw.calendar.dev/viewers/apps/tilepic.php";
-
 	if (isset($_GET["tpc"])) {
 		$tilepic_tpc = $_GET["tpc"];
 		$tilepic_viewer_url = $_GET["viewer"];
 		$tilepic_height = $_GET["height"];
 		$tilepic_width = $_GET["width"];
-	}	
+		$tilepic_layers = $_GET["layers"];
+	} 	
 	$tilepic_src = $tilepic_viewer_url."?p=".$tilepic_tpc."&t=";
 	//http://paw.calendar.dev/viewers/apps/tilepic.php?p=http://paw.calendar.dev/media/collectiveaccess/tilepics/0/15176_ca_object_representations_media_57_tilepic.tpc&t=
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -57,7 +54,7 @@
 										width: '<?php print $tilepic_width; ?>',
 										height: '<?php print $tilepic_height; ?>',
 										tilesize: 256,
-										levels: '6'
+										levels: '<?php print $tilepic_layers; ?>'
 									}
 								}); 
 							} else {

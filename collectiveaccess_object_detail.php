@@ -157,6 +157,7 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                 $r_tilepic_url = "http://".$url_base."/media/".$media_dir."/".$r_tilepic_infos["VOLUME"]."/".$r_tilepic_infos["HASH"]."/".$r_tilepic_infos["MAGIC"]."_".$r_tilepic_infos["FILENAME"];
                 $r_tilepic_height = $r_tilepic_infos["HEIGHT"];
                 $r_tilepic_width = $r_tilepic_infos["WIDTH"];
+                $r_tilepic_layers = $r_tilepic_infos["PROPERTIES"]["layers"];
                 $wp_ca_thumbnail = "<div style=\"max-height:600px;min-height:400px;width:100%;position:relative;overflow:hidden;\"><img style=\"position:absolute;width:100%;\" src=\"".$r_large_url."\"></div>";
                 add_filter('post_thumbnail_html',
                     function($html, $post_id, $post_thumbnail_id, $size, $attr) use ($wp_ca_thumbnail) {
@@ -179,6 +180,7 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                 $content_view->setVar("tilepic_remoteviewer_url","http://".$url_base."/viewers/apps/tilepic.php");
                 $content_view->setVar("tilepic_height",$r_tilepic_height);
                 $content_view->setVar("tilepic_width",$r_tilepic_width);
+                $content_view->setVar("tilepic_layers",$r_tilepic_layers);
             }
             $v->body = $content_view->render();
         } else {
