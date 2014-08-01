@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WP-CollectiveAccess v0.4.9\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-24 21:57+0100\n"
-"PO-Revision-Date: 2014-07-24 20:41:11+0000\n"
+"PO-Revision-Date: 2014-07-30 09:22:05+0000\n"
 "Last-Translator: Gautier Michelin <gm@ideesculture.com>\n"
 "Language-Team: Gautier Michelin <gm@ideesculture.com>\n"
 "MIME-Version: 1.0\n"
@@ -81,37 +81,37 @@ msgstr "Annuler tous les critères"
 msgid "Pages:"
 msgstr "Pages : "
 
-#: widget_browse_links.php:24
+#: widget_browse_links.php:21
 #@ collectiveaccess
 msgid "Display browse collections links"
 msgstr "Affiche les liens pour parcourir les collections"
 
-#: widget_browse_links.php:33
-#@ CollectiveAccess
+#: widget_browse_links.php:32
+#@ collectiveaccess
 msgid "Browse collections"
-msgstr ""
+msgstr "Parcourir les collections"
 
-#: widget_browse_links.php:58
+#: widget_browse_links.php:59
 #@ collectiveaccess
 msgid "Objects"
 msgstr "Objets"
 
-#: widget_browse_links.php:59
+#: widget_browse_links.php:60
 #@ collectiveaccess
 msgid "Entities"
 msgstr "Entités"
 
-#: widget_browse_links.php:60
+#: widget_browse_links.php:61
 #@ collectiveaccess
 msgid "Collections"
 msgstr "Collections"
 
-#: widget_browse_links.php:61
+#: widget_browse_links.php:62
 #@ collectiveaccess
 msgid "Places"
 msgstr "Lieux"
 
-#: widget_browse_links.php:62
+#: widget_browse_links.php:63
 #@ collectiveaccess
 msgid "Occurrences"
 msgstr "Occurrences"
@@ -147,7 +147,105 @@ msgid "Display a CollectiveAccess search form"
 msgstr "Affiche un formulaire de recherche CollectiveAccess"
 
 #: widget_search_form.php:52
-#@ collectiveacess
+#@ collectiveaccess
 msgid "Submit"
+msgstr "Envoyer"
+
+#: collectiveaccess_settings.php:33
+#@ collectiveaccess
+msgid "Identifiers"
+msgstr "Identifiants"
+
+#: collectiveaccess_settings.php:35
+#@ collectiveaccess
+msgid "URL Base"
+msgstr "URL d'accès aux webservices"
+
+#: collectiveaccess_settings.php:37
+#@ collectiveaccess
+msgid "Login"
+msgstr "Login"
+
+#: collectiveaccess_settings.php:39
+#@ collectiveaccess
+msgid "Password"
+msgstr "Mot de passe"
+
+#: collectiveaccess_settings.php:41
+#@ collectiveaccess
+msgid "Cache duration"
+msgstr "Durée en cache"
+
+#: collectiveaccess_settings.php:43
+#@ collectiveaccess
+msgid "Templates"
+msgstr "Modèles"
+
+#: collectiveaccess_settings.php:45
+#@ collectiveaccess
+msgid "Object details template"
+msgstr "Modèle pour l'affichage détaillé des objets"
+
+#: collectiveaccess_settings.php:47
+#@ collectiveaccess
+msgid "Object bundles"
+msgstr "Bundles pour les objets"
+
+#: collectiveaccess_settings.php:49
+#@ collectiveaccess
+msgid "Entitie details template"
+msgstr "Modèle pour l'affichage détaillé des entités"
+
+#: collectiveaccess_settings.php:54
+#@ collectiveaccess
+msgid ""
+"<p>CollectiveAccess Wordpress plugin requires access through Web Services to your CollectiveAccess\n"
+"        installation.<br/>\n"
+"        Please provide here login and password to an accound having WebServices authorized in your Providence back\n"
+"        office.</p>"
 msgstr ""
+"<p>Le plugin WP-CollectiveAccess nécessite un accès par les web services de CollectiveAccess à votre installation\n"
+"<br/>\n"
+"        Veuillez définir ici le login et le mot de passe d'un compte autorisé à utiliser les Webservices dans Providence.\n"
+"</p>"
+
+#: collectiveaccess_settings.php:71
+#@ collectiveaccess
+msgid "Define here the full URL to service.php inside your CollectiveAccess Providence installation."
+msgstr "Saisir ici l'URL complète vers le fichier service.php à la racine de votre installation de CollectiveAccess."
+
+#: collectiveaccess_settings.php:80
+#@ collectiveaccess
+msgid ""
+"WP-CollectiveAccess requires a connection to a CA profile with WebServices rights. <br/>\n"
+"        Check your CollectiveAccess installation under Manage > Access Control > Roles if you can't connect. <br/>At worst, try to connect as an\n"
+"        'administrator'."
+msgstr ""
+"WP-CollectiveAccess nécessite une connexion en tant qu'utilisateur de CollectiveAccess avec les droits d'accès aux WebServices.<br/>\n"
+"        Si vous n'arrivez pas à vous connecter, vérifiez sous Gérer > Contrôle d'accès > Rôles. <br/>Au pire, essayez de vous connecter en tant que 'administrator'."
+
+#: collectiveaccess_settings.php:100
+#@ collectiveaccess
+msgid "Enter a duration in seconds. During this time, data will be fetched from local storage instead of using Webservices.<br/>Default recommended value is 3600."
+msgstr "Saisir une durée en secondes. Durant ce délai, les données seront extraites d'un cache local au lieu d'utiliser les WebServices.<br/>La valeur recommandée est de 3600."
+
+#: collectiveaccess_settings.php:20
+#@ collectiveaccess
+msgid "CollectiveAccess WordPress Plugin"
+msgstr "Plugin Wordpress CollectiveAccess"
+
+#: collectiveaccess_settings.php:24
+#@ collectiveaccess
+msgid "Save Changes"
+msgstr "Enregistrer les modifications"
+
+#: collectiveaccess_settings.php:61
+#@ collectiveaccess
+msgid "You'll define here templates for displaying objects inside Wordpress."
+msgstr "Vous pouvez définir ici les modèles pour afficher les enregistrements issus de CollectiveAccess dans votre WordPress."
+
+#: widget_browse_links.php:26
+#@ collectiveaccess
+msgid "CollectiveAccess browse collections links"
+msgstr "CollectiveAccess : Liens pour parcourir les collections"
 
