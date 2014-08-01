@@ -21,7 +21,7 @@
 #wpca-tilepic-close A {
     font-weight:bold;
     color:white;
-    padding:10px;
+    padding:6px 10px 10px 10px;
     border-radius:6px;
     background-color:#222222;
 }

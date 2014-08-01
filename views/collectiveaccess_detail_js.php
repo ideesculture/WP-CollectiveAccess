@@ -10,7 +10,7 @@
 
 jQuery(document).ready(function(){
     jQuery('#mediaview').on("click", function(e) {
-        var overlay = jQuery("<div id='wpca-tilepic-overlay'><div id='wpca-tilepic-close'><a href='#'>close</a></div><iframe id='wpca-tilepic-iframe' src='<?php print $url; ?>' /></div>");
+        var overlay = jQuery("<div id='wpca-tilepic-overlay'><div id='wpca-tilepic-close'><a href='#'>x</a></div><iframe id='wpca-tilepic-iframe' src='<?php print $url; ?>' /></div>");
         overlay.appendTo(document.body);
         jQuery('#wpca-tilepic-close').on("click", function(e) {
             jQuery("#wpca-tilepic-overlay").remove();
