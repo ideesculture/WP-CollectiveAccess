@@ -74,7 +74,8 @@ function collectiveaccess_url_base_input() {
     //var_dump($url_base);die();
     // echo the field
     echo "<input id='url_base' name='collectiveaccess_options[url_base]' type='text' value='$url_base' />";
-    echo "<p class='description'>".__('Define here the full URL to service.php inside your CollectiveAccess Providence installation.',"collectiveaccess")."</p>";
+    echo "<p class='description'>".__('Define here the full URL path (without http://) to service.php inside your CollectiveAccess Providence installation.',"collectiveaccess")."</p>";
+    echo "<p class='description'>".__("<b>Example</b>: for <b><u>http://localhost/collectiveaccess/providence/service.php</u></b>, use <b></u>localhost/collectiveaccess/providence</u></b>","collectiveaccess")."</p>";
 }
 
 function collectiveaccess_login_input() {
@@ -114,7 +115,11 @@ function collectiveaccess_object_template_input() {
     echo "<textarea rows='12' cols='50' id='object_template' name='collectiveaccess_options[object_template]'>";
     echo $object_template;
     echo "</textarea>";
-    //var_dump($options);//die();
+    echo "<p class='description'>".
+        __("Need some info on what shoud be put there ?","collectiveaccess").
+        " <a href=https://github.com/ideesculture/WP-CollectiveAccess/wiki/Templates>".
+        __("Take a look at the plugin wiki.","collectiveaccess").
+        "</a></p>";
 }
 
 function collectiveaccess_object_bundles_input() {
@@ -125,7 +130,6 @@ function collectiveaccess_object_bundles_input() {
     echo "<textarea rows='12' cols='50' id='object_bundles' name='collectiveaccess_options[object_bundles]'>";
     echo $object_bundles;
     echo "</textarea>";
-    //var_dump($options);//die();
 }
 
 function collectiveaccess_entity_template_input() {
