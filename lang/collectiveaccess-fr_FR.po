@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: WP-CollectiveAccess v0.4.9\n"
+"Project-Id-Version: WP-CollectiveAccess v0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-24 21:57+0100\n"
-"PO-Revision-Date: 2014-07-30 09:22:05+0000\n"
+"PO-Revision-Date: 2014-08-01 21:48:43+0000\n"
 "Last-Translator: Gautier Michelin <gm@ideesculture.com>\n"
 "Language-Team: Gautier Michelin <gm@ideesculture.com>\n"
 "MIME-Version: 1.0\n"
@@ -20,38 +20,38 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Textdomain-Support: yes"
 
-#: WP-CollectiveAccess.php:106
+#: WP-CollectiveAccess.php:113
 #@ collectiveaccess
 msgid "Could not load the localization file: "
 msgstr "Impossible de charger le fichier de traduction : "
 
-#: WP-CollectiveAccess.php:120
+#: WP-CollectiveAccess.php:127
 #@ default
 msgid "Settings"
 msgstr "Réglages"
 
-#: collectiveaccess_objects_search.php:100
+#: collectiveaccess_objects_search.php:104
 #@ collectiveaccess
 msgid "Results for "
 msgstr "Résultats pour "
 
-#: collectiveaccess_objects_search.php:110
-#: collectiveaccess_objects_search.php:113
+#: collectiveaccess_objects_search.php:126
+#: collectiveaccess_objects_search.php:129
 #@ collectiveaccess
 msgid "Error"
 msgstr "Erreur"
 
-#: collectiveaccess_objects_search.php:111
+#: collectiveaccess_objects_search.php:127
 #@ collectiveaccess
 msgid "Configuration error, no url_base defined. Please check your settings."
 msgstr "Erreur de configuration, url_base non défini. Veuillez vérifier vos réglages."
 
-#: collectiveaccess_objects_search.php:114
+#: collectiveaccess_objects_search.php:130
 #@ collectiveaccess
 msgid "No query sent."
 msgstr "Pas de requête transmise."
 
-#: WP-CollectiveAccess.php:106
+#: WP-CollectiveAccess.php:113
 #@ collectiveaccess
 msgid "Problem with localization files : "
 msgstr "Problème avec les fichiers de localisation : "
@@ -87,6 +87,7 @@ msgid "Display browse collections links"
 msgstr "Affiche les liens pour parcourir les collections"
 
 #: widget_browse_links.php:32
+#: widget_browse_links.php:55
 #@ collectiveaccess
 msgid "Browse collections"
 msgstr "Parcourir les collections"
@@ -101,7 +102,7 @@ msgstr "Objets"
 msgid "Entities"
 msgstr "Entités"
 
-#: widget_browse_links.php:61
+#: widget_browse_links.php:63
 #@ collectiveaccess
 msgid "Collections"
 msgstr "Collections"
@@ -111,7 +112,7 @@ msgstr "Collections"
 msgid "Places"
 msgstr "Lieux"
 
-#: widget_browse_links.php:63
+#: widget_browse_links.php:61
 #@ collectiveaccess
 msgid "Occurrences"
 msgstr "Occurrences"
@@ -141,15 +142,10 @@ msgstr "URL base de CollectiveAccess"
 msgid "Object ID to display: "
 msgstr "Identifiant de l'objet à afficher : "
 
-#: widget_search_form.php:22
+#: widget_search_form.php:21
 #@ collectiveaccess
 msgid "Display a CollectiveAccess search form"
 msgstr "Affiche un formulaire de recherche CollectiveAccess"
-
-#: widget_search_form.php:52
-#@ collectiveaccess
-msgid "Submit"
-msgstr "Envoyer"
 
 #: collectiveaccess_settings.php:33
 #@ collectiveaccess
@@ -186,17 +182,12 @@ msgstr "Modèles"
 msgid "Object details template"
 msgstr "Modèle pour l'affichage détaillé des objets"
 
-#: collectiveaccess_settings.php:47
-#@ collectiveaccess
-msgid "Object bundles"
-msgstr "Bundles pour les objets"
-
 #: collectiveaccess_settings.php:49
 #@ collectiveaccess
 msgid "Entitie details template"
 msgstr "Modèle pour l'affichage détaillé des entités"
 
-#: collectiveaccess_settings.php:54
+#: collectiveaccess_settings.php:60
 #@ collectiveaccess
 msgid ""
 "<p>CollectiveAccess Wordpress plugin requires access through Web Services to your CollectiveAccess\n"
@@ -209,12 +200,12 @@ msgstr ""
 "        Veuillez définir ici le login et le mot de passe d'un compte autorisé à utiliser les Webservices dans Providence.\n"
 "</p>"
 
-#: collectiveaccess_settings.php:71
+#: collectiveaccess_settings.php:77
 #@ collectiveaccess
 msgid "Define here the full URL to service.php inside your CollectiveAccess Providence installation."
 msgstr "Saisir ici l'URL complète vers le fichier service.php à la racine de votre installation de CollectiveAccess."
 
-#: collectiveaccess_settings.php:80
+#: collectiveaccess_settings.php:86
 #@ collectiveaccess
 msgid ""
 "WP-CollectiveAccess requires a connection to a CA profile with WebServices rights. <br/>\n"
@@ -224,7 +215,7 @@ msgstr ""
 "WP-CollectiveAccess nécessite une connexion en tant qu'utilisateur de CollectiveAccess avec les droits d'accès aux WebServices.<br/>\n"
 "        Si vous n'arrivez pas à vous connecter, vérifiez sous Gérer > Contrôle d'accès > Rôles. <br/>Au pire, essayez de vous connecter en tant que 'administrator'."
 
-#: collectiveaccess_settings.php:100
+#: collectiveaccess_settings.php:106
 #@ collectiveaccess
 msgid "Enter a duration in seconds. During this time, data will be fetched from local storage instead of using Webservices.<br/>Default recommended value is 3600."
 msgstr "Saisir une durée en secondes. Durant ce délai, les données seront extraites d'un cache local au lieu d'utiliser les WebServices.<br/>La valeur recommandée est de 3600."
@@ -239,7 +230,7 @@ msgstr "Plugin Wordpress CollectiveAccess"
 msgid "Save Changes"
 msgstr "Enregistrer les modifications"
 
-#: collectiveaccess_settings.php:61
+#: collectiveaccess_settings.php:67
 #@ collectiveaccess
 msgid "You'll define here templates for displaying objects inside Wordpress."
 msgstr "Vous pouvez définir ici les modèles pour afficher les enregistrements issus de CollectiveAccess dans votre WordPress."
@@ -248,4 +239,46 @@ msgstr "Vous pouvez définir ici les modèles pour afficher les enregistrements 
 #@ collectiveaccess
 msgid "CollectiveAccess browse collections links"
 msgstr "CollectiveAccess : Liens pour parcourir les collections"
+
+#: collectiveaccess_browse.php:199
+#@ collectiveaccess
+msgid "Browse "
+msgstr "Parcourir"
+
+#: collectiveaccess_settings.php:51
+#@ collectiveaccess
+msgid "Place details template"
+msgstr "Modèle d'affichage détaillé pour les lieux"
+
+#: collectiveaccess_settings.php:53
+#@ collectiveaccess
+msgid "Occurrence details template"
+msgstr "Modèle d'affichage détaillé pour les occurrences"
+
+#: collectiveaccess_settings.php:55
+#@ collectiveaccess
+msgid "Collection details template"
+msgstr "Modèle d'affichage détaillé pour les collections"
+
+#: widget_browse_links.php:40
+#: widget_search_form.php:38
+#@ collectiveaccess
+msgid "Title:"
+msgstr "Titre :"
+
+#: widget_search_form.php:23
+#@ collectiveaccess
+msgid "CollectiveAccess Search form"
+msgstr "CollectiveAccess : Formulaire de recherche"
+
+#: widget_search_form.php:29
+#: widget_search_form.php:53
+#@ collectiveaccess
+msgid "Search the collections"
+msgstr "Chercher dans les collections"
+
+#: widget_search_form.php:58
+#@ collectiveaccess
+msgid "Search"
+msgstr "Chercher"
 
