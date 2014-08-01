@@ -46,7 +46,11 @@ function collectiveaccess_search($name_plural,$ca_table,$v, $url)
     }
     // getting view name to replace collectiveaccess_search
     if (!($view=$_POST["view"])) {
-        if (!($view=$_GET["view"])) $view = "";
+        if (!($view=$_GET["view"])) $view = null;
+    }
+    // getting header image to replace default-featured-image
+    if (!($view=$_POST["headerimage"])) {
+        if (!($view=$_GET["headerimage"])) $headerimage = null;
     }
     if (!($page=$_POST["page"])) $page=1;
 
@@ -100,7 +104,19 @@ function collectiveaccess_search($name_plural,$ca_table,$v, $url)
             $v->title = __("Results for ", 'collectiveaccess').$query;
         }
         // if a special view name has been defined, use it instead of the default one
-        $content_view = new simpleview_idc(($view ? : "collectiveaccess_search"), $wordpress_theme);
+        $content_view = new simpleview_idc(($view ? $view : "collectiveaccess_search"), $wordpress_theme);
+        // if a header image is defined, override default-featured-image
+        if ($headerimage) {
+            $wp_ca_thumbnail = "<div style=\"max-height:600px;min-height:400px;width:100%;position:relative;overflow:hidden;\"><img style=\"position:absolute;width:100%;\" src=\"".$headerimage."\"></div>";
+            add_filter(
+                'post_thumbnail_html',
+                function($html, $post_id, $post_thumbnail_id, $size, $attr) use ($wp_ca_thumbnail) {
+                    if ($wp_ca_thumbnail) return $wp_ca_thumbnail;
+                    return $html;
+                },
+                99, 5);
+        }
+
         $content_view->setVar("num_results",$num_results);
         $content_view->setVar("thumbnails",$thumbnails);
         $content_view->setVar("pagination",$pagination);
