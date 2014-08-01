@@ -14,6 +14,7 @@ require_once(plugin_dir_path( __FILE__ ) ."lib/cawrappercache/ItemServiceCache.p
 $vp->add('#/collections/object/detail#i', 'collectiveaccess_object_detail');
 $vp->add('#/collections/entity/detail#i', 'collectiveaccess_entity_detail');
 $vp->add('#/collections/place/detail#i', 'collectiveaccess_place_detail');
+$vp->add('#/collections/occurrence/detail#i', 'collectiveaccess_occurrence_detail');
 $vp->add('#/collections/collection/detail#i', 'collectiveaccess_collection_detail');
 
 function collectiveaccess_object_detail($v, $url){
@@ -24,6 +25,9 @@ function collectiveaccess_entity_detail($v, $url){
 }
 function collectiveaccess_place_detail($v, $url){
     collectiveaccess_detail("place","ca_places",$v, $url);
+}
+function collectiveaccess_occurrence_detail($v, $url){
+    collectiveaccess_detail("occurrence","ca_occurrences",$v, $url);
 }
 function collectiveaccess_collection_detail($v, $url){
     collectiveaccess_detail("collection","ca_collections",$v, $url);
