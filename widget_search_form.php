@@ -49,7 +49,7 @@ class search_form_widget extends WP_Widget {
         echo $before_widget;
         $widget_body =
             "<FORM action=\"".get_site_url()."/collections/objects/search\" method=\"post\">\n".
-                "<input type=\"text\" name=\"query\"> <input type=\"submit\" value=\"".__("Submit",'collectiveacess')."\">\n".
+                "<input type=\"text\" name=\"query\"> <input type=\"submit\" value=\"".__("Search",'collectiveaccess')."\">\n".
             "</FORM>";
 
         if ( !empty( $title ) ) { echo $before_title . $title . $after_title; };
