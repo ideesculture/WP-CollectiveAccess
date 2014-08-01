@@ -41,6 +41,19 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
     $v->template = 'page'; // optional
     $v->subtemplate = 'collections'; // optional
 
+    // getting title to overwrite default by post or get
+    if (!($title=$_POST["title"])) {
+        $title=$_GET["title"];
+    }
+    // getting view name to replace collectiveaccess_search
+    if (!($view=$_POST["view"])) {
+        if (!($view=$_GET["view"])) $view = null;
+    }
+    // getting header image to replace default-featured-image
+    if (!($view=$_POST["headerimage"])) {
+        if (!($view=$_GET["headerimage"])) $headerimage = null;
+    }
+
     $wordpress_theme = basename(get_template_directory());
     $options = get_option('collectiveaccess_options');
 
@@ -180,11 +193,26 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
             $pagination_subview->setVar("formname","browse_facets");
             $pagination = $pagination_subview->render();
         }
-
-        $v->title = "Browse ".$name_plural;
+        if (isset($title)) {
+            $v->title = $title;
+        } else {
+            $v->title = __("Browse ", 'collectiveaccess').$name_plural;
+        }
 
         // Creating the view, the theme directory name is used as a prefix to allow theme-specific subviews
-        $content_view = new simpleview_idc("collectiveaccess_browse", $wordpress_theme);
+        $content_view = new simpleview_idc(($view ? $view : "collectiveaccess_browse"), $wordpress_theme);
+        // if a header image is defined, override default-featured-image
+        if ($headerimage) {
+            $wp_ca_thumbnail = "<div style=\"max-height:600px;min-height:400px;width:100%;position:relative;overflow:hidden;\"><img style=\"position:absolute;width:100%;\" src=\"".$headerimage."\"></div>";
+            add_filter(
+                'post_thumbnail_html',
+                function($html, $post_id, $post_thumbnail_id, $size, $attr) use ($wp_ca_thumbnail) {
+                    if ($wp_ca_thumbnail) return $wp_ca_thumbnail;
+                    return $html;
+                },
+                99, 5);
+        }
+
         $content_view->setVar("thumbnails",$thumbnails);
         $content_view->setVar("pagination",$pagination);
         $content_view->setVar("removecriterias",$removecriterias);        
