@@ -29,30 +29,6 @@ function collectiveaccess_collection_detail($v, $url){
     collectiveaccess_detail("collection","ca_collections",$v, $url);
 }
 
-function tileviewer_js_registration() {
-    global $wp_scripts;
-
-    // tell WordPress to load jQuery UI tabs
-    wp_enqueue_script('jquery-ui-tabs');
- 
-    // get registered script object for jquery-ui
-    $ui = $wp_scripts->query('jquery-ui-core');
- 
-    // tell WordPress to load the Smoothness theme from Google CDN
-    $protocol = is_ssl() ? 'https' : 'http';
-    $url = "$protocol://ajax.googleapis.com/ajax/libs/jqueryui/{$ui->ver}/themes/smoothness/jquery-ui.min.css";
-    wp_enqueue_style('jquery-ui-smoothness', $url, false, null);
-
-    wp_register_style('jquery-tileviewer', plugins_url('js/jquery.tileviewer.css',__FILE__ ));
-    wp_enqueue_style('jquery.tileviewer');
-    wp_enqueue_script('jquery-hotkeys');
-    wp_register_script( 'jquery-mousewheel', plugins_url('js/jquery.mousewheel.js',__FILE__ ));
-    wp_enqueue_script('jquery-mousewheel');    
-    wp_register_script( 'jquery-tileviewer', plugins_url('js/jquery.tileviewer.js',__FILE__ ));
-    wp_enqueue_script('jquery-tileviewer');
-}
-add_action( 'wp_enqueue_scripts','tileviewer_js_registration');
-
 function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
 {
 	global $wpdb;
@@ -109,6 +85,7 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                 switch($bundle_parts[0]) {
                     //for representations, we have two allowed types : primary & nonprimary, we need to run all the representations to filter
                     case "representations":
+                        // load the tileviewer js & css if they are not
                         if (is_array($record["representations"])) {
                             foreach($record["representations"] as $representation) {
                                 if (($bundle_parts[1] == "primary" ) && ($representation["is_primary"] == true)) {
@@ -117,6 +94,8 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                                 }
                             }
                         }
+                        // remove all not-found representations bundle from the template
+                        $template = str_replace("^".$bundle,"",$template);
                         break;
                     case "related" :
                         switch($bundle_parts[1]) {
@@ -157,14 +136,27 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
             }
 
             if ($record["representations"]) {
+
                 // Extracting representation info from CA
-                $representation = reset($record["representations"]);
-                $representation_id = $representation["representation_id"];
+                foreach($record["representations"] as $representation) {
+                    if ($representation["is_primary"] == true) 
+                        $representation_id = $representation["representation_id"];
+                        $media_url = reset($representation["urls"]);
+                        // extracting media_dir (aka collectiveaccess CA_APP_NAME) from a media url
+                        // image are stored with a path like http://server/path/media/CA_APP_NAME/volume/hash/filename.ext
+                        $media_dir = reset(array_slice(explode("/",$media_url),-4,1));
+                }
+                $cache_duration=0;
                 $r_client = new ItemServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,"ca_object_representations","GET",$representation_id);
                 $r_record = $r_client->request()->getRawData();
                 $r_large_infos = $r_record["media"]["value"]["large"];
-                $r_large_url = "http://".$url_base."/media/musee/".$r_large_infos["VOLUME"]."/".$r_large_infos["HASH"]."/".$r_large_infos["MAGIC"]."_".$r_large_infos["FILENAME"];
-
+                $r_large_url = "http://".$url_base."/media/".$media_dir."/".$r_large_infos["VOLUME"]."/".$r_large_infos["HASH"]."/".$r_large_infos["MAGIC"]."_".$r_large_infos["FILENAME"];
+                $r_preview_infos = $r_record["media"]["value"]["preview170"];
+                $r_preview_url = "http://".$url_base."/media/".$media_dir."/".$r_preview_infos["VOLUME"]."/".$r_preview_infos["HASH"]."/".$r_preview_infos["MAGIC"]."_".$r_preview_infos["FILENAME"];
+                $r_tilepic_infos = $r_record["media"]["value"]["tilepic"];
+                $r_tilepic_url = "http://".$url_base."/media/".$media_dir."/".$r_tilepic_infos["VOLUME"]."/".$r_tilepic_infos["HASH"]."/".$r_tilepic_infos["MAGIC"]."_".$r_tilepic_infos["FILENAME"];
+                $r_tilepic_height = $r_tilepic_infos["HEIGHT"];
+                $r_tilepic_width = $r_tilepic_infos["WIDTH"];
                 $wp_ca_thumbnail = "<div style=\"max-height:600px;min-height:400px;width:100%;position:relative;overflow:hidden;\"><img style=\"position:absolute;width:100%;\" src=\"".$r_large_url."\"></div>";
                 add_filter('post_thumbnail_html',
                     function($html, $post_id, $post_thumbnail_id, $size, $attr) use ($wp_ca_thumbnail) {
@@ -172,11 +164,22 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                         return $html;
                     },
                     99, 5);
+                $template = "[caption align='alignright' width='150' id='mediaview']
+                    <a>
+                        <img class='size-full' title='Zoom sur l'oeuvre' src='$r_preview_url' style='width:150px' id='mediaview' /> Zoom sur l'oeuvre
+                    </a>
+                [/caption]".$template;
             }
 
             $content_view = new simpleview_idc("collectiveaccess_detail", $wordpress_theme);
             // template insertion
             $content_view->setVar("template",$template);
+            if(isset($r_tilepic_url)) {
+                $content_view->setVar("tilepic_image_url",$r_tilepic_url);
+                $content_view->setVar("tilepic_remoteviewer_url","http://".$url_base."/viewers/apps/tilepic.php");
+                $content_view->setVar("tilepic_height",$r_tilepic_height);
+                $content_view->setVar("tilepic_width",$r_tilepic_width);
+            }
             $v->body = $content_view->render();
         } else {
             $v->title = "Error";
