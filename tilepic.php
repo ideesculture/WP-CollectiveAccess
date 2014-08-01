@@ -29,7 +29,7 @@
 <script src='<?php print $base_url; ?>/js/jquery.tileviewer.js' type='text/javascript'></script>
 <script src='<?php print $base_url; ?>/js/jquery.hotkeys.js' type='text/javascript'></script>
 <script src='<?php print $base_url; ?>/js/jquery.tools.min.js' type='text/javascript'></script>
-<link rel="stylesheet" href="test.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="assets/css/tilepic.css" type="text/css" media="screen" />
 </head>
 <body>
 	<div id="caMediaPanel"> 
