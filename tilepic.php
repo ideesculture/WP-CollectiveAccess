@@ -1,53 +1,73 @@
 <?php
-	$pawtucket_url = "http://musee.idcultu.re/";
+	$base_url = dirname($_SERVER['REQUEST_URI']);
+	$tilepic_icon_url = $base_url."/assets/images";
+	
+	// defaulting to an image for now
+	$tilepic_tpc = "http://paw.calendar.dev/media/collectiveaccess/tilepics/0/15176_ca_object_representations_media_57_tilepic.tpc";
+	$tilepic_viewer_url = "http://paw.calendar.dev/viewers/apps/tilepic.php";
+
+	if (isset($_GET["tpc"])) {
+		$tilepic_tpc = $_GET["tpc"];
+		$tilepic_viewer_url = $_GET["viewer"];
+		$tilepic_height = $_GET["height"];
+		$tilepic_width = $_GET["width"];
+	}	
+	$tilepic_src = $tilepic_viewer_url."?p=".$tilepic_tpc."&t=";
+	//http://paw.calendar.dev/viewers/apps/tilepic.php?p=http://paw.calendar.dev/media/collectiveaccess/tilepics/0/15176_ca_object_representations_media_57_tilepic.tpc&t=
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>Viewer test</title>
+	<title>Tilepic viewer</title>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 	
-	<link href="<?php print $pawtucket_url; ?>test.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="<?php print $pawtucket_url; ?>/js/jquery/jquery-tileviewer/jquery.tileviewer.css" type="text/css" media="screen" />
-<script src='<?php print $pawtucket_url; ?>/js/jquery/jquery.js' type='text/javascript'></script>
-<script src='<?php print $pawtucket_url; ?>/js/jquery/jquery-migrate-1.1.1.js' type='text/javascript'></script>
-<script src='<?php print $pawtucket_url; ?>/js/jquery/jquery-ui/jquery-ui-1.9.2.custom.min.js' type='text/javascript'></script>
-<link rel='stylesheet' href='<?php print $pawtucket_url; ?>/js/jquery/jquery-ui/smoothness/jquery-ui-1.9.2.custom.css' type='text/css' media='screen'/>
-<script src='<?php print $pawtucket_url; ?>/js/jquery/jquery.mousewheel.js' type='text/javascript'></script>
-<script src='<?php print $pawtucket_url; ?>/js/jquery/jquery-tileviewer/jquery.tileviewer.js' type='text/javascript'></script>
-<script src='<?php print $pawtucket_url; ?>/js/jquery/jquery.hotkeys.js' type='text/javascript'></script>
-<script src='<?php print $pawtucket_url; ?>/js/ca/ca.genericpanel.js' type='text/javascript'></script>
-<script src='<?php print $pawtucket_url; ?>/js/jquery/jquery.tools.min.js' type='text/javascript'></script>
-<script src='<?php print $pawtucket_url; ?>/js/ca/ca.browsepanel.js' type='text/javascript'></script>
+<link rel="stylesheet" href="<?php print $base_url; ?>/js/jquery.tileviewer.css" type="text/css" media="screen" />
+<script src='<?php print $base_url; ?>/js/jquery.js' type='text/javascript'></script>
+<script src='<?php print $base_url; ?>/js/jquery-migrate-1.1.1.js' type='text/javascript'></script>
+<script src='<?php print $base_url; ?>/js/jquery-ui-1.9.2.custom.min.js' type='text/javascript'></script>
+<link rel='stylesheet' href='<?php print $base_url; ?>/js/jquery-ui-1.9.2.custom.css' type='text/css' media='screen'/>
+<script src='<?php print $base_url; ?>/js/jquery.mousewheel.js' type='text/javascript'></script>
+<script src='<?php print $base_url; ?>/js/jquery.tileviewer.js' type='text/javascript'></script>
+<script src='<?php print $base_url; ?>/js/jquery.hotkeys.js' type='text/javascript'></script>
+<script src='<?php print $base_url; ?>/js/jquery.tools.min.js' type='text/javascript'></script>
+<link rel="stylesheet" href="test.css" type="text/css" media="screen" />
 </head>
 <body>
-<a href='#' onclick='caMediaPanel.showPanel("<?php print $pawtucket_url; ?>/index.php/Detail/Object/GetRepresentationInfo/object_id/69/representation_id/57"); return false;' ><img src='http://musee.idcultu.re/media/musee/images/0/90185_ca_object_representations_media_57_mediumlarge.jpg' id='caMediaDisplayContentMedia' width='325' height='450' /></a>	
-
 	<div id="caMediaPanel"> 
 		<div id="caMediaPanelContentArea">
-			<?php print $get_representation_information; ?>
+			<div id="caMediaOverlayContent">
+						<div id='caMediaOverlayContentMedia' style='width:100%; height: 100%; position: absolute; top:0; left:0;z-index: 0;'>
+							
+						</div>
+						<script type='text/javascript'>
+						jQuery(document).ready(function() {
+							jQuery('#caMediaPanel').show();
+							var elem = document.createElement('canvas');
+							if (elem.getContext && elem.getContext('2d')) {
+								jQuery('#caMediaOverlayContentMedia').tileviewer({
+									id: 'caMediaOverlayContentMedia_viewer',
+									src: '<?php print $tilepic_src; ?>',
+									width: '100%',
+									height: '100%',
+									magnifier: false,
+									buttonUrlPath: "<?php print $tilepic_icon_url; ?>",
+									annotationLoadUrl: '',
+									annotationSaveUrl: '',
+									helpLoadUrl: '',
+									info: {
+										width: '<?php print $tilepic_width; ?>',
+										height: '<?php print $tilepic_height; ?>',
+										tilesize: 256,
+										levels: '6'
+									}
+								}); 
+							} else {
+								// No fall-back to Flash-based viewer for now, also there is one in Pawtucket
+							}						
+						});
+						</script>
+			</div><!-- end caMediaOverlayContent -->
 		</div>
 	</div>
-	<script type="text/javascript">
-	/*
-		Set up the "caMediaPanel" panel that will be triggered by links in object detail
-		Note that the actual <div>'s implementing the panel are located here in views/pageFormat/pageFooter.php
-	*/
-	var caMediaPanel;
-	jQuery(document).ready(function() {
-		if (caUI.initPanel) {
-			caMediaPanel = caUI.initPanel({ 
-				panelID: 'caMediaPanel',										/* DOM ID of the <div> enclosing the panel */
-				panelContentID: 'caMediaPanelContentArea',		/* DOM ID of the content area <div> in the panel */
-				exposeBackgroundColor: '#000000',						/* color (in hex notation) of background masking out page content; include the leading '#' in the color spec */
-				exposeBackgroundOpacity: 0.8,							/* opacity of background color masking out page content; 1.0 is opaque */
-				panelTransitionSpeed: 400, 									/* time it takes the panel to fade in/out in milliseconds */
-				allowMobileSafariZooming: true,
-				mobileSafariViewportTagID: '_msafari_viewport',
-				closeButtonSelector: '.close'					/* anything with the CSS classname "close" will trigger the panel to close */
-			});
-		}
-	});
-	</script>
 	</body>
 </html>
 
