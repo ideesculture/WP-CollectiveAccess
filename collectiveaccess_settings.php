@@ -15,16 +15,14 @@ function collectiveaccess_add_admin_page() {
 }
 
 function collectiveaccess_options_page(){
-    ?><div class=""wrap">
-    <php screen_icon(); ?>
-    <h2>CollectiveAccess WordPress Plugin</h2>
-    <form action="options.php" method="post">
-        <?php settings_fields('collectiveaccess_options'); ?>
-        <?php do_settings_sections('collectiveaccess'); ?>
-        <input name="Submit" type="submit" value="Save Changes" />
-    </form>
-    </div>
-    <?php
+    echo "<div class='wrap'>";
+    screen_icon();
+    echo "<h2>".__("CollectiveAccess WordPress Plugin","collectiveaccess")."</h2>";
+    echo "<form action='options.php' method='post'>";
+    settings_fields('collectiveaccess_options');
+    do_settings_sections('collectiveaccess');
+    echo "<input name='Submit' type='submit' value='".__("Save Changes","collectiveaccess")."' />";
+    echo "</form></div>";
 }
 
 /**
@@ -32,39 +30,35 @@ function collectiveaccess_options_page(){
  */
 function collectiveaccess_admin_init() {
     register_setting('collectiveaccess_options', 'collectiveaccess_options','collectiveaccess_validate_options');
-    add_settings_section('collectiveaccess_main','Identifiers','collectiveaccess_main_text',
+    add_settings_section('collectiveaccess_main',__('Identifiers',"collectiveaccess"),'collectiveaccess_main_text',
         'collectiveaccess');
-    add_settings_field('collectiveaccess_url_base','URL Base','collectiveaccess_url_base_input',
+    add_settings_field('collectiveaccess_url_base',__('URL Base',"collectiveaccess"),'collectiveaccess_url_base_input',
         'collectiveaccess','collectiveaccess_main');
-    add_settings_field('collectiveaccess_login','Login','collectiveaccess_login_input',
+    add_settings_field('collectiveaccess_login',__('Login',"collectiveaccess"),'collectiveaccess_login_input',
         'collectiveaccess','collectiveaccess_main');
-    add_settings_field('collectiveaccess_password','Password','collectiveaccess_password_input',
+    add_settings_field('collectiveaccess_password',__('Password',"collectiveaccess"),'collectiveaccess_password_input',
         'collectiveaccess','collectiveaccess_main');
-    add_settings_field('collectiveaccess_cache_duration','Cache duration','collectiveaccess_cache_duration_input',
+    add_settings_field('collectiveaccess_cache_duration',__('Cache duration',"collectiveaccess"),'collectiveaccess_cache_duration_input',
         'collectiveaccess','collectiveaccess_main');
-    add_settings_section('collectiveaccess_templates','Templates','collectiveaccess_templates_text',
+    add_settings_section('collectiveaccess_templates',__('Templates',"collectiveaccess"),'collectiveaccess_templates_text',
         'collectiveaccess');
-    add_settings_field('collectiveaccess_object_template','Object details template','collectiveaccess_object_template_input',
+    add_settings_field('collectiveaccess_object_template',__('Object details template',"collectiveaccess"),'collectiveaccess_object_template_input',
         'collectiveaccess','collectiveaccess_templates');
-    add_settings_field('collectiveaccess_object_bundles','Object bundles','collectiveaccess_object_bundles_input',
+    add_settings_field('collectiveaccess_object_bundles',__('Object bundles',"collectiveaccess"),'collectiveaccess_object_bundles_input',
         'collectiveaccess','collectiveaccess_templates');
-    add_settings_field('collectiveaccess_entity_template','Entitie details template','collectiveaccess_entity_template_input',
+    add_settings_field('collectiveaccess_entity_template',__('Entitie details template',"collectiveaccess"),'collectiveaccess_entity_template_input',
         'collectiveaccess','collectiveaccess_templates');
 }
 
 function collectiveaccess_main_text() {
-    ?>
-    <p>CollectiveAccess Wordpress plugin requires access through Web Services to your CollectiveAccess
+    _e("<p>CollectiveAccess Wordpress plugin requires access through Web Services to your CollectiveAccess
         installation.<br/>
         Please provide here login and password to an accound having WebServices authorized in your Providence back
-        office.</p>
-<?php
+        office.</p>","collectiveaccess");
 }
 
 function collectiveaccess_templates_text() {
-    ?>
-    <p>You'll define here templates for displaying objects inside Wordpress.</p>
-<?php
+    echo "<p>".__("You'll define here templates for displaying objects inside Wordpress.","collectiveaccess")."</p>";
 }
 
 function collectiveaccess_url_base_input() {
@@ -74,6 +68,17 @@ function collectiveaccess_url_base_input() {
     //var_dump($url_base);die();
     // echo the field
     echo "<input id='url_base' name='collectiveaccess_options[url_base]' type='text' value='$url_base' />";
+    echo "<p class='description'>".__('Define here the full URL to service.php inside your CollectiveAccess Providence installation.',"collectiveaccess")."</p>";
+}
+
+function collectiveaccess_media_dir_input() {
+    // get option 'login' value from the database
+    $options = get_option('collectiveaccess_options');
+    $media_dir = $options['media_dir'];
+    //var_dump($url_base);die();
+    // echo the field
+    echo "<input id='url_base' name='collectiveaccess_options[url_base]' type='text' value='$url_base' />";
+    echo "<p class='description'>".__('Define here the full URL to service.php inside your CollectiveAccess Providence installation.',"collectiveaccess")."</p>";
 }
 
 function collectiveaccess_login_input() {
@@ -82,6 +87,9 @@ function collectiveaccess_login_input() {
     $login = $options['login'];
     // echo the field
     echo "<input id='login' name='collectiveaccess_options[login]' type='text' value='$login' />";
+    echo "<p class='description'>".__("WP-CollectiveAccess requires a connection to a CA profile with WebServices rights. <br/>
+        Check your CollectiveAccess installation under Manage > Access Control > Roles if you can't connect. <br/>At worst, try to connect as an
+        'administrator'.","collectiveaccess")."</p>";
 }
 
 function collectiveaccess_password_input() {
@@ -99,6 +107,7 @@ function collectiveaccess_cache_duration_input() {
     //var_dump($url_base);die();
     // echo the field
     echo "<input id='cache_duration' name='collectiveaccess_options[cache_duration]' type='text' value='$cache_duration' />";
+    echo "<p class='description'>".__("Enter a duration in seconds. During this time, data will be fetched from local storage instead of using Webservices.<br/>Default recommended value is 3600.","collectiveaccess")."</p>";
 }
 
 function collectiveaccess_object_template_input() {
