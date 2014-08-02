@@ -24,22 +24,19 @@ if (!isset( $_POST['action']))
 //relative to where your plugin is located
 require_once('../../../wp-load.php');
 
+$action = esc_attr($_POST['action']);
+
+// A bit of security : the allowed_actions array must contain all allowed actions
+$allowed_actions = array(
+    'getimage','getchildren'
+);
+
 //Typical headers
 header('Content-Type: text/html');
 send_nosniff_header();
-
 //Disable caching
 header('Cache-Control: no-cache');
 header('Pragma: no-cache');
-
-$action = esc_attr($_POST['action']);
-
-//A bit of security : the allowed_actions array must contain all allowed actions
-$allowed_actions = array(
-    'getimage'
-);
-
-$test = add_action('collectiveaccess_ajax_getimage', 'collectiveaccess_ajax_getimage');
 
 function collectiveaccess_ajax_getimage()
 {
@@ -50,10 +47,22 @@ function collectiveaccess_ajax_getimage()
     $result = collectiveaccess_getpreviewimage($_REQUEST[table], $_REQUEST[id]);
     if($result == false) die('-1');
     echo json_encode($result);
-
 }
 
+function collectiveaccess_ajax_getchildren()
+{
+    // Checking if XHR (ajax) request
+    $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    if(!$isAjax) die('-1');
+
+    $result = collectiveaccess_getchildrenrecords($_REQUEST[table], $_REQUEST[id]);
+    if($result == false) die('-1');
+    echo json_encode($result);
+}
+
+
 if(in_array($action, $allowed_actions)) {
+    add_action('collectiveaccess_ajax_'.$action, 'collectiveaccess_ajax_'.$action);
     do_action('collectiveaccess_ajax_'.$action);
 } else {
     die('-1');
