@@ -52,7 +52,7 @@ function collectiveaccess_search($name_plural,$ca_table,$v, $url)
     if (!($headerimage=$_POST["headerimage"])) {
         if (!($headerimage=$_GET["headerimage"])) $headerimage = null;
     }
-    var
+    
     if (!($page=$_POST["page"])) $page=1;
 
     $v->template = 'page'; // optional
@@ -72,7 +72,7 @@ function collectiveaccess_search($name_plural,$ca_table,$v, $url)
         // Disabling Wordpress HTML sanitization to avoid having <p></p> coming everywhere
         remove_filter( 'the_content', 'wpautop' );
 
-        $client = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,"ca_objects",$query);
+        $client = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,$query);
         $request = $client->request();
         $result_data = $request->getRawData();
         $result_data = $result_data["results"];
@@ -80,20 +80,22 @@ function collectiveaccess_search($name_plural,$ca_table,$v, $url)
         $num_results = (int) count($result_data);
         $num_per_page = 12 ;
         $pages = ceil($num_results / $num_per_page);
-        //var_dump($page);die();
         $i = 1;
-        foreach($result_data as $result) {
-            if (ceil($i/$num_per_page) == $page) {
-                $thumbnail_subview = new simpleview_idc("collectiveaccess_thumbnail", $wordpress_theme);
-                $thumbnail_subview->setVar("id",$result["id"]);
-                $thumbnail_subview->setVar("display_label",$result["display_label"]);
-                $thumbnail_subview->setVar("idno",$result["idno"]);
-                $thumbnail_subview->setVar("ca_table",$ca_table);
-                $thumbnails .= $thumbnail_subview->render();
+        // If we have results...
+        if(count($result_data)>0) {
+            foreach($result_data as $result) {
+                // For each results included in the page limit, compute the thumbnail subview
+                if (ceil($i/$num_per_page) == $page) {
+                    $thumbnail_subview = new simpleview_idc("collectiveaccess_thumbnail", $wordpress_theme);
+                    $thumbnail_subview->setVar("id",$result["id"]);
+                    $thumbnail_subview->setVar("display_label",$result["display_label"]);
+                    $thumbnail_subview->setVar("idno",$result["idno"]);
+                    $thumbnail_subview->setVar("ca_table",$ca_table);
+                    $thumbnails .= $thumbnail_subview->render();
+                }
+                $i++;
             }
-            $i++;
         }
-
         // Page navigation
         $pagination_subview = new simpleview_idc("collectiveaccess_pagination", $wordpress_theme);
         $pagination_subview->setVar("pages",$pages);
