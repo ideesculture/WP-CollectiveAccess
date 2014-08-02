@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WP-CollectiveAccess v0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-24 21:57+0100\n"
-"PO-Revision-Date: 2014-08-01 21:48:43+0000\n"
+"PO-Revision-Date: 2014-08-02 01:03:56+0000\n"
 "Last-Translator: Gautier Michelin <gm@ideesculture.com>\n"
 "Language-Team: Gautier Michelin <gm@ideesculture.com>\n"
 "MIME-Version: 1.0\n"
@@ -135,7 +135,7 @@ msgstr "Titre : "
 #: widget_random_object.php:43
 #@ collectiveaccess
 msgid "CollectiveAccess URL base: "
-msgstr "URL base de CollectiveAccess"
+msgstr "URL base de CollectiveAccess : "
 
 #: widget_random_object.php:44
 #@ collectiveaccess
@@ -243,7 +243,7 @@ msgstr "CollectiveAccess : Liens pour parcourir les collections"
 #: collectiveaccess_browse.php:199
 #@ collectiveaccess
 msgid "Browse "
-msgstr "Parcourir"
+msgstr "Parcourir "
 
 #: collectiveaccess_settings.php:51
 #@ collectiveaccess
