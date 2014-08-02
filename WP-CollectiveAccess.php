@@ -41,6 +41,7 @@ define("SIMPLEVIEW_IDC_DIR",plugin_dir_path( __FILE__ )."views/");
 require_once(plugin_dir_path( __FILE__ ) ."collectiveaccess_object_detail.php");
 require_once(plugin_dir_path( __FILE__ ) ."collectiveaccess_objects_search.php");
 require_once(plugin_dir_path( __FILE__ ) ."collectiveaccess_browse.php");
+require_once(plugin_dir_path( __FILE__ ) ."collectiveaccess_objects_hierarchy.php");
 
 // Requiring widget functions
 // require_once(plugin_dir_path( __FILE__ ) ."widget_random_object.php");
