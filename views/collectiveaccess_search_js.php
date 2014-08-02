@@ -1,1 +1,1 @@
-<?php include('collectiveaccess_js.php'); ?>
+<?php include(__DIR__.'/collectiveaccess_js.php'); ?>
