@@ -9,7 +9,6 @@ function collectiveaccess_getpreviewimage($ca_table,$id)
 {
     global $wpdb;
 
-    // extract an id from the URL
     $options = get_option('collectiveaccess_options');
 
     $url_base = empty($options["url_base"]) ? 'localhost' : $options["url_base"];
@@ -18,7 +17,6 @@ function collectiveaccess_getpreviewimage($ca_table,$id)
     $cache_duration = $options["cache_duration"];
 
     if ($url_base && ($id > 0)) {
-        $cache_duration = 0;
         $client = new ItemServiceCache($wpdb, $cache_duration, "http://" . $login . ":" . $password . "@" . $url_base, $ca_table, "GET", $id);
         $result = $client->request();
         $record = $result->getRawData();
@@ -29,6 +27,27 @@ function collectiveaccess_getpreviewimage($ca_table,$id)
                 }
             }
         }
+    }
+    return false;
+}
+
+function collectiveaccess_getchildrenrecords($ca_table,$id)
+{
+    global $wpdb;
+
+    $options = get_option('collectiveaccess_options');
+
+    $url_base = empty($options["url_base"]) ? 'localhost' : $options["url_base"];
+    $login = empty($options["login"]) ? 'admin' : $options["login"];
+    $password = empty($options["password"]) ? 'admin' : $options["password"];
+    $cache_duration = $options["cache_duration"];
+
+    if ($url_base && ($id > 0)) {
+        $query = "parent_id:".$id;
+        $client = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,$query);
+        $result = $client->request();
+        $record = $result->getRawData();
+        return json_encode($record);
     }
     return false;
 }
