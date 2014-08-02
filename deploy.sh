@@ -1,16 +1,18 @@
 #!/bin/bash
 
+#
+# This script allows a fast sync from github to wordpress.org svn
+# This is an adaptation of deanc script : https://github.com/deanc/wordpress-plugin-git-svn
+#
+
 # args
 MSG=${1-'Deploy from git'}
 BRANCH=${2-'trunk'}
 
-SLUG=$(basename $(dirname $PWD))
-SRC_DIR=$(dirname $PWD)/git
-DEST_DIR=$(dirname $PWD)/svn/$BRANCH
-
-# These are needed because this itself is a Git repo
-export GIT_WORK_TREE=$(dirname $PWD)/git
-export GIT_DIR=$(dirname $PWD)/git/.git
+SLUG=wp-collectiveaccess
+SRC_DIR=~/dev/wordpress/wp-content/plugins/WP-CollectiveAccess
+SVN_DIR=~/dev/wp-collectiveaccess/
+DEST_DIR=$SVN_DIR/$BRANCH
 
 # make sure we're deploying from the right dir
 if [ ! -d "$SRC_DIR/.git" ]; then
@@ -19,9 +21,9 @@ if [ ! -d "$SRC_DIR/.git" ]; then
 fi
 
 # make sure the SVN repo exists
-if [ ! -d "$(dirname $PWD)/svn" ]; then
-	echo "Coudn't find the SVN repo at $(dirname $PWD)/svn. Trying to create one..."
-	svn co http://plugins.svn.wordpress.org/$SLUG/ $(dirname $PWD)/svn
+if [ ! -d "$SVN_DIR" ]; then
+	echo "Coudn't find the SVN repo at $SVN_DIR. Trying to create one..."
+	svn co http://plugins.svn.wordpress.org/$SLUG/ $SVN_DIR
 	exit
 fi
 
@@ -47,12 +49,6 @@ do
 done
 
 cd $DEST_DIR
-
-# Transform the readme
-if [ -f readme.md ]; then
-	mv readme.md readme.txt
-	sed -i '' -e 's/^# \(.*\)$/=== \1 ===/' -e 's/ #* ===$/ ===/' -e 's/^## \(.*\)$/== \1 ==/' -e 's/ #* ==$/ ==/' -e 's/^### \(.*\)$/= \1 =/' -e 's/ #* =$/ =/' readme.txt
-fi
 
 # svn addremove
 svn stat | awk '/^\?/ {print $2}' | xargs svn add > /dev/null 2>&1
