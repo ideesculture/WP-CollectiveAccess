@@ -44,10 +44,21 @@ function collectiveaccess_getchildrenrecords($ca_table,$id)
 
     if ($url_base && ($id > 0)) {
         $query = "parent_id:".$id;
-        $client = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,$query);
-        $result = $client->request();
-        $record = $result->getRawData();
-        return json_encode($record);
+        $r_client = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,$query);
+        $r_result = $r_client->request();
+        $r_record = $r_result->getRawData();
+        if(isset($r_record["results"])) {
+            foreach($r_record["results"] as $result) {
+                    $subcontent_view = new simpleview_idc("collectiveaccess_hierarchy_item", $wordpress_theme);
+                    $subcontent_view->setVar("id",$result["id"]);
+                    $subcontent_view->setVar("label",$result["display_label"]);
+                    $subcontent_view->setVar("table",$ca_table);
+                    $results .= $subcontent_view->render();
+                }
+            return $results;
+        } else {
+            return false;
+        }
     }
     return false;
 }
