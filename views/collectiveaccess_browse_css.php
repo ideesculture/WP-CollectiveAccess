@@ -1,1 +1,1 @@
-<?php include('collectiveaccess_css.php'); ?>
+<?php include(__DIR__.'/collectiveaccess_css.php'); ?>
