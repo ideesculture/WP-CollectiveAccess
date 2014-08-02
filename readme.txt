@@ -78,17 +78,14 @@ Please take a look at README.md in the same directory. Don't hesitate to contact
 
 = 0.5 =
 
-(planned for the 30/07/2014)
-
-- Ability to customize
-	- page title (for search, browse & detail view) ; 
-	- override the default view by a custom view for a single request (post or get $view with a string, for exemple allow to display with an intro the content of a set) ;
-	- through templates via admin settings ;
-	- create customized views inside views/local
-	- page header image through CSS
-- Records displayed : objects, entities, places, events, collections
-- Internationalization & translations : english (default), french (fr_FR), italian (it_IT)
-- TilePic viewer (this requires to have a working Pawtucket installation & to install a php script acting as a proxy, see __URL_TO_COME__ for more info)
+- [x] Customization : page title (for search, browse & detail view) ; 
+- [x] Customization : override the default view by a custom view for a single request (post or get $view with a string, for exemple allow to display with an intro the content of a set) ;
+- [x] Customization : through templates via admin settings ;
+- [x] Customization : create customized views inside views/local
+- [x] Customization : page header image through CSS
+- [x] Records displayed : objects, entities, places, events, collections
+- [x] Internationalization & translations : english (default), french (fr_FR), italian (it_IT)
+- [x] TilePic viewer (this requires to have a working Pawtucket installation, see __URL_TO_COME__ for more info)
 
 = 0.4.9 =
 
@@ -105,5 +102,3 @@ Please take a look at README.md in the same directory. Don't hesitate to contact
 = 0.1 =
 
 - first working version
-
-
