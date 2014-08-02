@@ -109,7 +109,8 @@ We would like to cite the following projects whose code, fonts or graphics are i
 - [x] Customization : page header image through CSS
 - [x] Records displayed : objects, entities, places, events, collections
 - [x] Internationalization & translations : english (default), french (fr_FR), italian (it_IT)
-- [x] TilePic viewer (this requires to have a working Pawtucket installation, see __URL_TO_COME__ for more info)
+- [x] TilePic viewer
+- [x] Hierarchy viewer
 
 = 0.4.9 =
 
