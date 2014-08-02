@@ -73,9 +73,10 @@ function collectiveaccess_url_base_input() {
     $url_base = $options['url_base'];
     //var_dump($url_base);die();
     // echo the field
-    echo "<input id='url_base' name='collectiveaccess_options[url_base]' type='text' value='$url_base' />";
-    echo "<p class='description'>".__('Define here the full URL path (without http://) to service.php inside your CollectiveAccess Providence installation.',"collectiveaccess")."</p>";
-    echo "<p class='description'>".__("<b>Example</b>: for <b><u>http://localhost/collectiveaccess/providence/service.php</u></b>, use <b></u>localhost/collectiveaccess/providence</u></b>","collectiveaccess")."</p>";
+    echo "<input id='url_base' name='collectiveaccess_options[url_base]' type='text' class='regular-text code' value='$url_base' />";
+    echo "<p class='description'>".__('Define here the full URL path to service.php inside your CollectiveAccess Providence installation.',"collectiveaccess")."</p>";
+    echo "<p class='description'>".__('Note that the string will be cleaned up on save, to keep only necessary parts : server & path (no protocol, no /service.php)',"collectiveaccess")."</p>";
+    echo "<p class='description'>".__("<b>Example</b>: for <b><u>http://localhost/collectiveaccess/providence/service.php</u></b>, we need only <b></u>localhost/collectiveaccess/providence</u></b>","collectiveaccess")."</p>";
 }
 
 function collectiveaccess_login_input() {
@@ -83,7 +84,7 @@ function collectiveaccess_login_input() {
     $options = get_option('collectiveaccess_options');
     $login = $options['login'];
     // echo the field
-    echo "<input id='login' name='collectiveaccess_options[login]' type='text' value='$login' />";
+    echo "<input id='login' name='collectiveaccess_options[login]' type='text' class='regular-text code' value='$login' />";
     echo "<p class='description'>".__("WP-CollectiveAccess requires a connection to a CA profile with WebServices rights. <br/>
         Check your CollectiveAccess installation under Manage > Access Control > Roles if you can't connect. <br/>At worst, try to connect as an
         'administrator'.","collectiveaccess")."</p>";
@@ -171,7 +172,14 @@ function collectiveaccess_validate_options($input) {
     $valid = array();
     $valid['login'] = preg_replace('/[^a-zA_Z]/','',$input['login']);
     $valid['password'] = preg_replace('/[^a-zA_Z0-9]/','',$input['password']);
-    $valid['url_base'] = preg_replace('/[^a-zA_Z0-9\.\/]/','',$input['url_base']);
+    // removing protocol from url_base (only http for now)
+    $url = str_replace("http://", "", $input['url_base']);
+    // removing ending /service.php or /index.php
+    $url = str_replace("/service.php", "", $url);
+    $url = str_replace("/index.php", "", $url);
+    // removing trailing slash if any
+    $url = rtrim($url, '/\\'); 
+    $valid['url_base'] = preg_replace('/[^a-zA_Z0-9\.\/]/','',$url);
     $valid['cache_duration'] = preg_replace('/[^\d]/','',$input['cache_duration']);
     // TODO : sanitize html & javascript for templates !
     $valid['object_template'] = $input['object_template'];
