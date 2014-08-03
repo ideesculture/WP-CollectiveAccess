@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WP-CollectiveAccess v0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-24 21:57+0100\n"
-"PO-Revision-Date: 2014-08-02 01:03:56+0000\n"
+"PO-Revision-Date: 2014-08-03 09:02:51+0000\n"
 "Last-Translator: Gautier Michelin <gm@ideesculture.com>\n"
 "Language-Team: Gautier Michelin <gm@ideesculture.com>\n"
 "MIME-Version: 1.0\n"
@@ -20,38 +20,41 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Textdomain-Support: yes"
 
-#: WP-CollectiveAccess.php:113
+#: WP-CollectiveAccess.php:114
 #@ collectiveaccess
 msgid "Could not load the localization file: "
 msgstr "Impossible de charger le fichier de traduction : "
 
-#: WP-CollectiveAccess.php:127
+#: WP-CollectiveAccess.php:128
 #@ default
 msgid "Settings"
 msgstr "Réglages"
 
-#: collectiveaccess_objects_search.php:104
+#: collectiveaccess_objects_search.php:107
 #@ collectiveaccess
 msgid "Results for "
 msgstr "Résultats pour "
 
-#: collectiveaccess_objects_search.php:126
+#: collectiveaccess_objects_hierarchy.php:135
+#: collectiveaccess_objects_hierarchy.php:138
 #: collectiveaccess_objects_search.php:129
+#: collectiveaccess_objects_search.php:132
 #@ collectiveaccess
 msgid "Error"
 msgstr "Erreur"
 
-#: collectiveaccess_objects_search.php:127
+#: collectiveaccess_objects_hierarchy.php:136
+#: collectiveaccess_objects_search.php:130
 #@ collectiveaccess
 msgid "Configuration error, no url_base defined. Please check your settings."
 msgstr "Erreur de configuration, url_base non défini. Veuillez vérifier vos réglages."
 
-#: collectiveaccess_objects_search.php:130
+#: collectiveaccess_objects_search.php:133
 #@ collectiveaccess
 msgid "No query sent."
 msgstr "Pas de requête transmise."
 
-#: WP-CollectiveAccess.php:113
+#: WP-CollectiveAccess.php:114
 #@ collectiveaccess
 msgid "Problem with localization files : "
 msgstr "Problème avec les fichiers de localisation : "
@@ -200,12 +203,7 @@ msgstr ""
 "        Veuillez définir ici le login et le mot de passe d'un compte autorisé à utiliser les Webservices dans Providence.\n"
 "</p>"
 
-#: collectiveaccess_settings.php:77
-#@ collectiveaccess
-msgid "Define here the full URL to service.php inside your CollectiveAccess Providence installation."
-msgstr "Saisir ici l'URL complète vers le fichier service.php à la racine de votre installation de CollectiveAccess."
-
-#: collectiveaccess_settings.php:86
+#: collectiveaccess_settings.php:88
 #@ collectiveaccess
 msgid ""
 "WP-CollectiveAccess requires a connection to a CA profile with WebServices rights. <br/>\n"
@@ -215,7 +213,7 @@ msgstr ""
 "WP-CollectiveAccess nécessite une connexion en tant qu'utilisateur de CollectiveAccess avec les droits d'accès aux WebServices.<br/>\n"
 "        Si vous n'arrivez pas à vous connecter, vérifiez sous Gérer > Contrôle d'accès > Rôles. <br/>Au pire, essayez de vous connecter en tant que 'administrator'."
 
-#: collectiveaccess_settings.php:106
+#: collectiveaccess_settings.php:108
 #@ collectiveaccess
 msgid "Enter a duration in seconds. During this time, data will be fetched from local storage instead of using Webservices.<br/>Default recommended value is 3600."
 msgstr "Saisir une durée en secondes. Durant ce délai, les données seront extraites d'un cache local au lieu d'utiliser les WebServices.<br/>La valeur recommandée est de 3600."
@@ -281,4 +279,51 @@ msgstr "Chercher dans les collections"
 #@ collectiveaccess
 msgid "Search"
 msgstr "Chercher"
+
+#: collectiveaccess_objects_hierarchy.php:115
+#@ collectiveaccess
+msgid "Explore the tree of the collections"
+msgstr ""
+
+#: collectiveaccess_objects_hierarchy.php:139
+#@ collectiveaccess
+msgid "No type sent."
+msgstr "Aucun type défini."
+
+#: collectiveaccess_settings.php:77
+#@ collectiveaccess
+msgid "Define here the full URL path to service.php inside your CollectiveAccess Providence installation."
+msgstr "Veuillez saisir ici l'URL vers fichier service.php à l'intérieur de votre installation de CollectiveAccess."
+
+#: collectiveaccess_settings.php:78
+#@ collectiveaccess
+msgid "Note that the string will be cleaned up on save, to keep only necessary parts : server & path (no protocol, no /service.php)"
+msgstr "Note : cette URL sera nettoyée à l'enregistrement, pour garder uniquement les parties nécessaires : nom du serveur et chemin (pas de protocole, pas de /service.php)"
+
+#: collectiveaccess_settings.php:79
+#@ collectiveaccess
+msgid "<b>Example</b>: for <b><u>http://localhost/collectiveaccess/providence/service.php</u></b>, we need only <b></u>localhost/collectiveaccess/providence</u></b>"
+msgstr "<b>Exemple</b>: pour <b><u>http://localhost/collectiveaccess/providence/service.php</u></b>, nous avons uniquement besoin de <b></u>localhost/collectiveaccess/providence</u></b>"
+
+#: collectiveaccess_settings.php:120
+#@ collectiveaccess
+msgid "Need some info on what shoud be put there ?"
+msgstr "Besoin d'informations sur ce qu'il faut définir ici ?"
+
+#: collectiveaccess_settings.php:122
+#@ collectiveaccess
+msgid "Take a look at the plugin wiki."
+msgstr "Veuillez jeter un coup d'oeil sur le wiki."
+
+#: views/collectiveaccess_search_html.php:9
+#, php-format
+#@ collectiveaccess
+msgid "%d results"
+msgstr "%d résultats"
+
+#: views/collectiveaccess_search_html.php:11
+#, php-format
+#@ collectiveaccess
+msgid "%d result"
+msgstr "%d résultat"
 
