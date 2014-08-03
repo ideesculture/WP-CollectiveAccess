@@ -233,11 +233,13 @@ function collectiveaccess_detail_hierarchy($wpdb, $ca_table, $id) {
         $result_data = $result_data["results"];
 
         foreach($result_data as $result) {
-            $subcontent_view = new simpleview_idc("collectiveaccess_hierarchy_item", $wordpress_theme);
-            $subcontent_view->setVar("id",$result["id"]);
-            $subcontent_view->setVar("label",$result["display_label"]);
-            $subcontent_view->setVar("table",$ca_table);
-            $results .= $subcontent_view->render();
+            $subsubcontent_view = new simpleview_idc("collectiveaccess_hierarchy_item", $wordpress_theme);
+            $subsubcontent_view->setVar("id",$result["id"]);
+            $subsubcontent_view->setVar("label",$result["display_label"]);
+            $subsubcontent_view->setVar("table",$ca_table);
+            $results .= $subsubcontent_view->render();
         }
-        return $results;
+        $subcontent_view = new simpleview_idc("collectiveaccess_hierarchy", $wordpress_theme);
+        $subcontent_view->setVar("results",$results);
+        return $subcontent_view->render();
 }
