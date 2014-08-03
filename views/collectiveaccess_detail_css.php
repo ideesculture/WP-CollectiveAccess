@@ -1,3 +1,5 @@
+<?php include(__DIR__.'/collectiveaccess_css.php'); ?>
+
 #wpca-tilepic-iframe {
     width:100%;
     height:100%;
