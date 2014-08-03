@@ -1,3 +1,4 @@
+<?php include(__DIR__.'/collectiveaccess_js.php'); ?>
 <?php
 	$tilepicphp_url = plugins_url( 'tilepic.php', WP_CA_MAIN_FILE);
     $tpc_image_url = $this->getVar('tilepic_image_url');
