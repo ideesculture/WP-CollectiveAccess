@@ -40,6 +40,8 @@ function collectiveaccess_admin_init() {
         'collectiveaccess','collectiveaccess_main');
     add_settings_field('collectiveaccess_cache_duration',__('Cache duration',"collectiveaccess"),'collectiveaccess_cache_duration_input',
         'collectiveaccess','collectiveaccess_main');
+    add_settings_field('collectiveaccess_empty_cache',__('Empty the cache',"collectiveaccess"),'collectiveaccess_empty_cache_input',
+        'collectiveaccess','collectiveaccess_main');
     add_settings_section('collectiveaccess_templates',__('Templates',"collectiveaccess"),'collectiveaccess_templates_text',
         'collectiveaccess');
     add_settings_field('collectiveaccess_object_template',__('Object details template',"collectiveaccess"),'collectiveaccess_object_template_input',
@@ -108,6 +110,17 @@ function collectiveaccess_cache_duration_input() {
     echo "<p class='description'>".__("Enter a duration in seconds. During this time, data will be fetched from local storage instead of using Webservices.<br/>Default recommended value is 3600.","collectiveaccess")."</p>";
 }
 
+function collectiveaccess_empty_cache_input() {
+    // get option 'login' value from the database
+    $options = get_option('collectiveaccess_options');
+    $empty_cache = $options['empty_cache'];
+    //var_dump($url_base);die();
+    // echo the field
+    echo "<INPUT type='radio' name='collectiveaccess_options[empty_cache]' value='0' ".(!$empty_cache ? "checked" : "")."> Ne pas vider le cache ";
+    echo "<INPUT type='radio' name='collectiveaccess_options[empty_cache]' value='1' ".($empty_cache ? "checked" : "")."> Vider le cache";
+    echo "<p class='description'>".__("Option to empty cache on save. We recommend it to you if you change URL, login and/or password to your CA database.","collectiveaccess")."</p>";
+}
+
 function collectiveaccess_object_template_input() {
     // get option 'login' value from the database
     $options = get_option('collectiveaccess_options');
@@ -166,9 +179,10 @@ function collectiveaccess_collection_template_input() {
 }
 
 function collectiveaccess_validate_options($input) {
-
-    // TODO : if user, base_url or password is changed, clear the cache.
-
+    // Empty cache stays always null in the database, this is just a temporary token.
+    $valid['empty_cache'] = 0;
+    // If empty_cache has been tickled, call empty_cache()
+    if($input['empty_cache']) collectiveaccess_empty_cache();
     $valid = array();
     $valid['login'] = preg_replace('/[^a-zA_Z]/','',$input['login']);
     $valid['password'] = preg_replace('/[^a-zA_Z0-9]/','',$input['password']);
@@ -183,7 +197,10 @@ function collectiveaccess_validate_options($input) {
     $valid['cache_duration'] = preg_replace('/[^\d]/','',$input['cache_duration']);
     // TODO : sanitize html & javascript for templates !
     $valid['object_template'] = $input['object_template'];
-    $valid['object_bundles'] = $input['object_bundles'];
     $valid['entity_template'] = $input['entity_template'];
+    $valid['place_template'] = $input['place_template'];
+    $valid['occurrence_template'] = $input['occurrence_template'];
+    $valid['collection_template'] = $input['collection_template'];
+
     return $valid;
 }
