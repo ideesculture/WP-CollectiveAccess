@@ -63,3 +63,11 @@ function collectiveaccess_getchildrenrecords($ca_table,$id)
     return false;
 }
 
+function collectiveaccess_empty_cache() {
+    global $wpdb;
+    $prefix=$wpdb->prefix;
+        
+    $db_query = "TRUNCATE TABLE {$prefix}collectiveaccess_cache;";
+    $db_results = $wpdb->query($db_query);
+    return true;
+}
