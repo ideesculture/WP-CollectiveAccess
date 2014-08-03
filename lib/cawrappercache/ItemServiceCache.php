@@ -38,13 +38,13 @@ class ItemServiceCache extends ItemService {
 
 		// Test if JSON result already in db, if present & not older than $duration seconds, send it back in a ServiceResult
         $db_query = "SELECT result, (adddate(time, INTERVAL {$duration} SECOND) < now()) as expired FROM {$prefix}collectiveaccess_cache WHERE service=\"{$service}\" AND base_url=\"{$base_url}\" AND catable=\"{$table}\" AND mode=\"{$mode}\" AND query=\"{$id}\";";
-		$db_results = $this->wpdb->get_results($db_query);
-
+        $db_results = $this->wpdb->get_results($db_query);
+		
         // If there's only one result in cache
 		if (count($db_results) == 1) {
             $db_result = reset($db_results);
             // and if not expired, send it back
-            if (!$db_result->expired) return new ServiceResult(stripslashes($db_result->result));
+            if (!$db_result->expired) return new ServiceResult($db_result->result);
         }
         // No valid result & something in cache, clear it
         if(count($db_results) > 0) {
