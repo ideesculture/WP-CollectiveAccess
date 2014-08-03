@@ -132,7 +132,7 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                                 break;
                         }
                         break;
-                    case "ca_objects" :
+                    case $ca_table :
                         // next line : error protection when the bundle code doesn't give anything back
                         if($record[$bundle_parts[0].".".$bundle_parts[1]]) {
                             foreach($record[$bundle_parts[0].".".$bundle_parts[1]] as $bundle_content) {
