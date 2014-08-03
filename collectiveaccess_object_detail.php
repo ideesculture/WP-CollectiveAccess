@@ -10,6 +10,7 @@ require_once(plugin_dir_path( __FILE__ ) ."lib/virtualthemedpages/Virtual_Themed
 $vp =  new Virtual_Themed_Pages_BC();
 
 require_once(plugin_dir_path( __FILE__ ) ."lib/cawrappercache/ItemServiceCache.php");
+require_once(plugin_dir_path( __FILE__ ) ."lib/cawrappercache/SearchServiceCache.php");
 
 $vp->add('#/collections/object/detail#i', 'collectiveaccess_object_detail');
 $vp->add('#/collections/entity/detail#i', 'collectiveaccess_entity_detail');
@@ -97,6 +98,11 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                 $bundle_parts = explode(".",$bundle);
 
                 switch($bundle_parts[0]) {
+                    case "hierarchy" :
+                        $hierarchy = collectiveaccess_detail_hierarchy($wpdb,$ca_table,$id);
+                        // remove all not-found representations bundle from the template
+                        $template = str_replace("^".$bundle,$hierarchy,$template);
+                        break;
                     //for representations, we have two allowed types : primary & nonprimary, we need to run all the representations to filter
                     case "representations":
                         // load the tileviewer js & css if they are not
@@ -213,3 +219,25 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
     //var_dump($v);
 }
 
+function collectiveaccess_detail_hierarchy($wpdb, $ca_table, $id) {
+        $options = get_option('collectiveaccess_options');
+
+        $url_base = empty( $options["url_base"] ) ? 'localhost' : $options["url_base"];
+        $login = empty($options["login"]) ? 'admin' : $options["login"];
+        $password = empty($options["password"]) ? 'admin' : $options["password"];
+        $cache_duration = $options["cache_duration"];
+
+        $client = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"parent_id:".$id);
+        $request = $client->request();
+        $result_data = $request->getRawData();
+        $result_data = $result_data["results"];
+
+        foreach($result_data as $result) {
+            $subcontent_view = new simpleview_idc("collectiveaccess_hierarchy_item", $wordpress_theme);
+            $subcontent_view->setVar("id",$result["id"]);
+            $subcontent_view->setVar("label",$result["display_label"]);
+            $subcontent_view->setVar("table",$ca_table);
+            $results .= $subcontent_view->render();
+        }
+        return $results;
+}
