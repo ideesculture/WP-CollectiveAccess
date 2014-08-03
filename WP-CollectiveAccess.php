@@ -25,6 +25,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Requiring common handlers & functions
+require_once(plugin_dir_path( __FILE__ ) ."collectiveaccess_common_functions.php");
+
 // Requiring admin page file
 require_once(plugin_dir_path( __FILE__ ) ."collectiveaccess_settings.php");
 
