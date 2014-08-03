@@ -93,7 +93,6 @@ function collectiveaccess_hierarchy($name_plural,$ca_table,$v, $url)
             $client = new ItemServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"GET",$root);
             $request = $client->request();
             $result_data = $request->getRawData();
-            //$result_data=$result_data["results"];
             $results .= "<h2>".reset(reset($result_data["preferred_labels"]))."</h2>";
             $client = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"parent_id:".$root);
             $request = $client->request();
