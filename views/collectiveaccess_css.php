@@ -110,3 +110,30 @@ p.facetname:first-child {
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+.linked_objects_title {
+    font-family: Lato, sans-serif;
+    font-size: 22px;
+    text-transform:uppercase;
+    font-style: normal;
+    font-weight: 300;
+    margin:10px 0 14px 0; 
+}
+
+.linked_object {
+    float:left;
+    width:80px;
+    margin-right:10px;
+    margin-bottom:10px;
+}
+
+.linked_representation_object {
+    height:80px;
+    background-color:black;
+    display:table-cell;
+    vertical-align:middle;
+}
+
+.linked_object_name {
+    font-size:12px;
+}

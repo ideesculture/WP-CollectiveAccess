@@ -76,6 +76,10 @@ Please take a look at README.md in the same directory. Don't hesitate to contact
 
 == Changelog ==
 
+= 0.5.1 =
+
+- [x] Improved linked object : display, with nice thumbnail & a subview
+
 = 0.5 =
 
 - [x] Customization : page title (for search, browse & detail view) ; 

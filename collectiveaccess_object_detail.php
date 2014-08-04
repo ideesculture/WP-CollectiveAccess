@@ -119,21 +119,62 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                         break;
                     case "related" :
                         switch($bundle_parts[1]) {
+                            case "ca_objects" :
+                                if (isset($record["related"]["ca_objects"])) {
+                                    $linked_objects_view = new simpleview_idc("collectiveaccess_detail_linked_objects", $wordpress_theme);
+                                    foreach($record["related"]["ca_objects"] as $object) {
+                                        $related_object_client = new ItemServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"GET",$object["object_id"]);
+                                        $related_object_result = $related_object_client->request();
+                                        $related_object_record = $related_object_result->getRawData();
+                                        //var_dump($related_object_record);die();
+                                        $representations = $related_object_record["representations"];
+                                        $linked_representation_object = "";
+                                        foreach ($representations as $representation) {
+                                            if($representation["is_primary"]) {
+                                                $linked_representation_object = $representation["urls"]["preview170"];
+                                            }
+                                        }
+                                        $linked_representation_view = new simpleview_idc("collectiveaccess_detail_linked_object", $wordpress_theme);
+                                        $linked_representation_view->setVar("linked_representation_object",$linked_representation_object);
+                                        $linked_representation_view->setVar("name",$object["name"]);
+                                        $linked_representation_view->setVar("link",get_site_url()."/collections/object/detail/".$object["object_id"]);
+                                        $linked_objects .= $linked_representation_view->render();
+                                    }
+                                    $linked_objects_view->setVar("linked_objects",$linked_objects);
+                                    $bundle_value = $linked_objects_view->render();
+                                }
+                                $template = str_replace("^".$bundle,$bundle_value,$template);
+                                break;
                             case "ca_entities" :
                                 if (isset($record["related"]["ca_entities"]))
                                 foreach($record["related"]["ca_entities"] as $entity) {
                                     if ($bundle_value) $bundle_value .= $separator;
-                                    $bundle_value .= "<a href=\"/collections/entity/detail/".$entity["entity_id"]."\">".$entity["displayname"]."</a>";
+                                    $bundle_value .= "<a href=\"".get_site_url()."/collections/entity/detail/".$entity["entity_id"]."\">".$entity["displayname"]."</a>";
                                 }
                                 $template = str_replace("^".$bundle,$bundle_value,$template);
                                 break;
-                            case "ca_objects" :
-                                if (isset($record["related"]["ca_objects"]))
-                                    //var_dump($record["related"]["ca_objects"]);die();
-                                    foreach($record["related"]["ca_objects"] as $object) {
-                                        if ($bundle_value) $bundle_value .= $separator;
-                                        $bundle_value .= "<a href=\"/collections/object/detail/".$object["object_id"]."\">".$object["name"]."</a>";
-                                    }
+                            case "ca_occurrences" :
+                                if (isset($record["related"]["ca_occurrences"]))
+                                foreach($record["related"]["ca_occurrences"] as $entity) {
+                                    if ($bundle_value) $bundle_value .= $separator;
+                                    $bundle_value .= "<a href=\"".get_site_url()."/collections/occurrence/detail/".$occurrence["occurrence_id"]."\">".$occurrence["displayname"]."</a>";
+                                }
+                                $template = str_replace("^".$bundle,$bundle_value,$template);
+                                break;
+                            case "ca_places" :
+                                if (isset($record["related"]["ca_places"]))
+                                foreach($record["related"]["ca_places"] as $entity) {
+                                    if ($bundle_value) $bundle_value .= $separator;
+                                    $bundle_value .= "<a href=\"".get_site_url()."/collections/place/detail/".$entity["place_id"]."\">".$place["displayname"]."</a>";
+                                }
+                                $template = str_replace("^".$bundle,$bundle_value,$template);
+                                break;
+                            case "ca_collections" :
+                                if (isset($record["related"]["ca_collections"]))
+                                foreach($record["related"]["ca_collections"] as $collection) {
+                                    if ($bundle_value) $bundle_value .= $separator;
+                                    $bundle_value .= "<a href=\"/".get_site_url()."collections/collection/detail/".$collection["collection_id"]."\">".$collection["displayname"]."</a>";
+                                }
                                 $template = str_replace("^".$bundle,$bundle_value,$template);
                                 break;
                         }
