@@ -59,7 +59,7 @@ register_activation_hook( __FILE__, "collectiveaccess_install" );
 add_action('init', 'collectiveaccess_i18n_init');
 
 global $wpca_version;
-$wpca_version = "0.5.0";
+$wpca_version = "0.5.1";
 
 define("WP_CA_MAIN_FILE",__FILE__);
 define("WP_CA_DIR",__DIR__."/");
