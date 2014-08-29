@@ -82,12 +82,15 @@ function collectiveaccess_hierarchy($name_plural,$ca_table,$v, $url)
             $result_data = $request->getRawData();
             $result_data=$result_data["results"];
             // if we find only one suitable type in list_items
-            if((count($result_data) == 1) && (isset(reset($result_data)["id"]))) {
-                $type_id = reset($result_data)[id];    
-                $client = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"type_id:".$type_id);
-                $request = $client->request();
-                $result_data = $request->getRawData();
-                $result_data = $result_data["results"];
+            if(count($result_data) == 1) {
+                $result_data_reset = reset($result_data);
+                if((count($result_data) == 1) && (isset(reset($result_data_reset)["id"]))) {
+                    $type_id = $result_data_reset[id];
+                    $client = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"type_id:".$type_id);
+                    $request = $client->request();
+                    $result_data = $request->getRawData();
+                    $result_data = $result_data["results"];
+                }
             }
         } elseif($root) {
             $client = new ItemServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"GET",$root);
