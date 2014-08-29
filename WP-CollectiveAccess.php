@@ -57,6 +57,7 @@ register_activation_hook( __FILE__, "collectiveaccess_install" );
 
 // i18n
 add_action('init', 'collectiveaccess_i18n_init');
+add_action( 'admin_notices', 'collectiveaccess_activation_message') ;
 
 global $wpca_version;
 $wpca_version = "0.5.1";
@@ -79,25 +80,47 @@ function collectiveaccess_install() {
 
 	// if version < 3.9, deactivate our plugin (not tested with a version under 3.9)
     if( version_compare( get_bloginfo( "version" ), "3.7", "<" ) ) {
-        deactivate_plugins( basename( __FILE__ ) );
+        deactivate_plugins( basename( __FILE__ ) );       
     }
-	if($installed_version != $wpca_version) {
+    // We need mod_rewrite to activate the module
+    elseif(!in_array('mod_rewrite',apache_get_modules())) {
+    	deactivate_plugins( basename( __FILE__ ) );       	
+    } else {
 
-        $table_name = $wpdb->prefix . "collectiveaccess_cache";
+    	// everything OK, continue the activation
+		if($installed_version != $wpca_version) {
+	        $table_name = $wpdb->prefix . "collectiveaccess_cache";
+	        // for easier reading & maintenance, $sql var is written in conf/db_table_creation.php
+	        include(plugin_dir_path( __FILE__ )."conf/db_table_creation.php");
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			dbDelta( $sql );
 
-        // for easier reading & maintenance, $sql var is written in conf/db_table_creation.php
-        include(plugin_dir_path( __FILE__ )."conf/db_table_creation.php");
+			update_option( "wpca_version", $wpca_version );
+		}
 
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		dbDelta( $sql );
+	    // for easier reading & maintenance, default options values are written in conf/default_options_values.php
+	    include(plugin_dir_path( __FILE__ )."conf/default_options_values.php");
 
-		update_option( "wpca_version", $wpca_version );
+	    update_option("collectiveaccess_options", $collectiveaccess_options);
+
+    }
+
+}
+
+function collectiveaccess_activation_message() {
+	if (!is_plugin_active(WP_CA_MAIN_FILE)) {
+		if( version_compare( get_bloginfo( "version" ), "3.7", "<" ) ) 
+			$message = "Wordpress too old. Version 3.7 minimum needed, 3.9+ recommended.";
+		if(!in_array('mod_rewrite',apache_get_modules())) 
+			$message = 'Missing mod_rewrite for Apache to allow custom routes for WP-CollectiveAccess.';
+		deactivate_plugins( basename( __FILE__ ) );       	
+		echo "<div class='error'><p>".$message."</p></div>";
 	}
+}
 
-    // for easier reading & maintenance, default options values are written in conf/default_options_values.php
-    include(plugin_dir_path( __FILE__ )."conf/default_options_values.php");
-
-    update_option("collectiveaccess_options", $collectiveaccess_options);
+function collectiveaccess_mod_rewrite_not_available() {
+	$html = '<div class="updated"><p>'.__('Mod_rewrite is not available on your server. Please ask your administrator to install it.', 'collectiveaccess').'</p></div>';
+	echo $html;
 }
 
 function collectiveaccess_uninstall() {
