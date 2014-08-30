@@ -34,7 +34,6 @@ class search_form_widget extends WP_Widget {
         $title = $instance['title'];
         $search_domains = $instance['search_domains'];
         ?>
-        // TODO : make a list of ca_objects, ca_entities, etc.
         <p><?php _e('Title:','collectiveaccess');?> <input class="widefat" name="<?php echo $this->get_field_name( 'title' ); ?>"  type="text" value="<?php echo esc_attr( $title ); ?>" /></p>
         <?php
     }
