@@ -80,9 +80,10 @@ function collectiveaccess_install() {
 	// if version < 3.9, deactivate our plugin (not tested with a version under 3.9)
     if( version_compare( get_bloginfo( "version" ), "3.7", "<" ) ) {
         die( 'This plugin requires Wordpress version 3.7.  Sorry about that.' );
-    }
-    // We need mod_rewrite to activate the module
-    elseif(!in_array('mod_rewrite',apache_get_modules())) {
+    } elseif (!is_callable('curl_init')) {
+		die( 'This plugin requires PHP_CURL, please contact your server administrator.' );
+  	// We need mod_rewrite to activate the module
+  	} elseif(!in_array('mod_rewrite',apache_get_modules())) {
         die( 'This plugin requires Apache mod_rewrite.' );
     } else {
 
