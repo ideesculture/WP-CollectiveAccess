@@ -57,7 +57,6 @@ register_activation_hook( __FILE__, "collectiveaccess_install" );
 
 // i18n
 add_action('init', 'collectiveaccess_i18n_init');
-add_action( 'admin_notices', 'collectiveaccess_activation_message') ;
 
 global $wpca_version;
 $wpca_version = "0.5.1";
@@ -80,11 +79,11 @@ function collectiveaccess_install() {
 
 	// if version < 3.9, deactivate our plugin (not tested with a version under 3.9)
     if( version_compare( get_bloginfo( "version" ), "3.7", "<" ) ) {
-        deactivate_plugins( basename( __FILE__ ) );       
+        die( 'This plugin requires Wordpress version 3.7.  Sorry about that.' );
     }
     // We need mod_rewrite to activate the module
     elseif(!in_array('mod_rewrite',apache_get_modules())) {
-    	deactivate_plugins( basename( __FILE__ ) );       	
+        die( 'This plugin requires Apache mod_rewrite.' );
     } else {
 
     	// everything OK, continue the activation
@@ -102,20 +101,7 @@ function collectiveaccess_install() {
 	    include(plugin_dir_path( __FILE__ )."conf/default_options_values.php");
 
 	    update_option("collectiveaccess_options", $collectiveaccess_options);
-
     }
-
-}
-
-function collectiveaccess_activation_message() {
-	if (!is_plugin_active(WP_CA_MAIN_FILE)) {
-		if( version_compare( get_bloginfo( "version" ), "3.7", "<" ) ) 
-			$message = "Wordpress too old. Version 3.7 minimum needed, 3.9+ recommended.";
-		if(!in_array('mod_rewrite',apache_get_modules())) 
-			$message = 'Missing mod_rewrite for Apache to allow custom routes for WP-CollectiveAccess.';
-		deactivate_plugins( basename( __FILE__ ) );       	
-		echo "<div class='error'><p>".$message."</p></div>";
-	}
 }
 
 function collectiveaccess_mod_rewrite_not_available() {
