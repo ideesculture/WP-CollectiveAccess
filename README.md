@@ -99,6 +99,11 @@ We would like to cite the following projects whose code, fonts or graphics are i
 
 ## Changelog
 
+= 0.5.2 =
+- [ ] Error message on activation if prerequisite is not satisfied (mod_rewrite, WP version = 3.7+)
+- [ ] Slow loading on browse start page
+- [ ] Problem on hierarchy view : records not related seemed to be displayed, investigating
+
 = 0.5.1 =
 
 - [x] Improved linked object : display, with nice thumbnail & a subview
