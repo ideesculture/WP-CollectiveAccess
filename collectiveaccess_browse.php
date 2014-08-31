@@ -150,7 +150,6 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
 
         // Preparing ws for Browse
         $client = new BrowseServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"OPTIONS");
-
         // if we have a POST, then we have criterias, so filter facets
         if(!empty($criterias)) {
             $client->setRequestBody(array("criteria" => $criterias));
@@ -163,6 +162,7 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
         // Facets subview
         // The facets are rendered in a subview for more easier maintenance : views/collectiveaccess_browse_facets_html.php
         $facets_subview = new simpleview_idc("collectiveaccess_browse_facets", $wordpress_theme);
+        unset($facets["title_facet"]);
         $facets_subview->setVar("facets",$facets);
         $facets_subview->setVar("have_criterias",(count($criterias)>0));
         $facets_subview->setVar("json_uncleaned_criterias",$json_uncleaned_criterias);
@@ -191,7 +191,7 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
                     if (ceil($i/$num_per_page) == $page) {
 
                         // Creating subviews for each thumbnail : views/collectiveaccess_browse_facets_html.php
-                        $thumbnail_subview = new simpleview_idc("collectiveaccess_browse_facets", $wordpress_theme);
+                        $thumbnail_subview = new simpleview_idc("collectiveaccess_thumbnail", $wordpress_theme);
                         $thumbnail_subview->setVar("id",$result["id"]);
                         $thumbnail_subview->setVar("display_label",$result["display_label"]);
                         $thumbnail_subview->setVar("idno",$result["idno"]);
@@ -207,6 +207,7 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
             $pagination_subview->setVar("pages",$pages);
             $pagination_subview->setVar("formname","browse_facets");
             $pagination = $pagination_subview->render();
+            
         }
         if (isset($title)) {
             $v->title = $title;
