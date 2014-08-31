@@ -97,13 +97,17 @@ function collectiveaccess_hierarchy($name_plural,$ca_table,$v, $url)
             $client = new ItemServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"GET",$root);
             $request = $client->request();
             $result_data = $request->getRawData();
-            $results .= "<h2>".reset(reset($result_data["preferred_labels"]))."</h2>";
-            $client = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"parent_id:".$root);
-            $request = $client->request();
-            $result_data = $request->getRawData();
-            $result_data = $result_data["results"];
+            if (isset($result_data["preferred_labels"])) {
+	            $results .= "<h2>".reset(reset($result_data["preferred_labels"]))."</h2>";
+	            $client = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"ca_objects.parent_id:".$root);
+	            $request = $client->request();
+	            $result_data = $request->getRawData();
+	            $result_data = $result_data["results"];
+            } else {
+				$results .= "<h2>Root ID does not correspond to any record</h2>";
+				$result_data = array();
+            }
         }
-
         foreach($result_data as $result) {
             $subcontent_view = new simpleview_idc("collectiveaccess_hierarchy_item", $wordpress_theme);
             $subcontent_view->setVar("id",$result["id"]);
