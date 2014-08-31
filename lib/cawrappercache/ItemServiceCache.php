@@ -56,7 +56,7 @@ class ItemServiceCache extends ItemService {
 
         // caching it
         $db_query = "INSERT INTO {$prefix}collectiveaccess_cache (service, base_url, catable, mode, query, result)"
-            ." values (\"{$service}\", \"{$base_url}\", \"{$table}\", \"{$mode}\", \"{$id}\", \"".addslashes(json_encode($result->getRawData(), JSON_UNESCAPED_UNICODE))."\")";
+            ." values (\"{$service}\", \"{$base_url}\", \"{$table}\", \"{$mode}\", \"{$id}\", \"".addslashes(json_encode($result->getRawData()))."\")";
         $db_result = $wpdb->get_results($db_query);
 
         return $result;

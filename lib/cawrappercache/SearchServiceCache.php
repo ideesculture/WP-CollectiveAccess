@@ -55,8 +55,16 @@ class SearchServiceCache extends SearchService {
         // Generating a new result
         $result = parent::request();
         // caching it
-        $db_query = "INSERT INTO {$prefix}collectiveaccess_cache (service, base_url, catable, query, result)"
-            ." values (\"{$service}\", \"{$base_url}\", \"{$table}\", \"{$query}\", \"".addslashes(json_encode($result->getRawData(), JSON_UNESCAPED_UNICODE))."\")";
+        /*if (version_compare(phpversion(), '5.4.0', '<')) {
+			// php 5.3 misses JSON_UNESCAPED_UNICODE constant
+			$json_encoded = json_encode_unescaped_unicode($result->getRawData());
+		} else {
+			$json_encoded = json_encode($result->getRawData(),JSON_UNESCAPED_UNICODE);
+		}*/
+		$json_encoded = json_encode($result->getRawData());
+		$db_query = "INSERT INTO {$prefix}collectiveaccess_cache (service, base_url, catable, query, result)"
+            ." values (\"{$service}\", \"{$base_url}\", \"{$table}\", \"{$query}\", \"".addslashes($json_encoded)."\")";
+
         $db_result = $wpdb->get_results($db_query);
 
         return $result;
