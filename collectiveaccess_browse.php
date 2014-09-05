@@ -170,7 +170,9 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
         $facets_subview->setVar("page",$page);
         $facets_content = $facets_subview->render();
 
-        // if we have a POST, then we have criterias, so display results
+        // if we no criteria, we define one artificially to display all objects
+        if(empty($criterias)) $criterias = array("has_media_facet" => array(1,0));
+        
         if(!empty($criterias)) {
             $client = new BrowseServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"GET");
             $client->setRequestBody(array("criteria" => $criterias));
