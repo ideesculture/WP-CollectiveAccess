@@ -23,23 +23,23 @@ $vp->add('#/collections/collections/browse#i', 'collectiveaccess_collections_bro
 // All functions for browse are based on a common browse function which takes a presentation name (first argument) and
 // the object table related in CA
 function collectiveaccess_objects_browse($v, $url){
-    collectiveaccess_browse("objects","ca_objects",$v, $url);
+    collectiveaccess_browse("objects","object","ca_objects",$v, $url);
 }
 function collectiveaccess_entities_browse($v, $url){
-    collectiveaccess_browse("entities","ca_entities",$v, $url);
+    collectiveaccess_browse("entities","entity","ca_entities",$v, $url);
 }
 function collectiveaccess_places_browse($v, $url){
-    collectiveaccess_browse("places","ca_places",$v, $url);
+    collectiveaccess_browse("places","place","ca_places",$v, $url);
 }
 function collectiveaccess_occurrences_browse($v, $url){
-    collectiveaccess_browse("occurrences","ca_occurrences",$v, $url);
+    collectiveaccess_browse("occurrences","occurrence","ca_occurrences",$v, $url);
 }
 function collectiveaccess_collections_browse($v, $url){
-    collectiveaccess_browse("collections","ca_collections",$v, $url);
+    collectiveaccess_browse("collections","collection","ca_collections",$v, $url);
 }
 
 // Main function declaration
-function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
+function collectiveaccess_browse($name_plural, $name_singular, $ca_table, $v, $url)
 {
 	global $wpdb;
 
@@ -170,12 +170,14 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
         $facets_subview->setVar("page",$page);
         $facets_content = $facets_subview->render();
 
+
         // if we no criteria, we define one artificially to display all objects
         if(empty($criterias)) $criterias = array("has_media_facet" => array(1,0));
         
         if(!empty($criterias)) {
+
             $client = new BrowseServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"GET");
-            $client->setRequestBody(array("criteria" => $criterias));
+            if(!empty($criterias)) $client->setRequestBody(array("criteria" => $criterias));
 
             $client_result = $client->request();
             $results = $client_result->getRawData();
@@ -198,6 +200,7 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
                         $thumbnail_subview->setVar("display_label",$result["display_label"]);
                         $thumbnail_subview->setVar("idno",$result["idno"]);
                         $thumbnail_subview->setVar("ca_table",$ca_table);
+                        $thumbnail_subview->setVar("name_singular",$name_singular);
                         $thumbnails .= $thumbnail_subview->render();
                     }
                     $i++;
@@ -209,8 +212,8 @@ function collectiveaccess_browse($name_plural,$ca_table,$v, $url)
             $pagination_subview->setVar("pages",$pages);
             $pagination_subview->setVar("formname","browse_facets");
             $pagination = $pagination_subview->render();
-            
         }
+
         if (isset($title)) {
             $v->title = $title;
         } else {
