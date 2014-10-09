@@ -43,7 +43,13 @@ function collectiveaccess_getchildrenrecords($ca_table,$id)
     $cache_duration = $options["cache_duration"];
 
     if ($url_base && ($id > 0)) {
-        $query = "parent_id:".$id;
+
+        if (isset($ca_table) && $ca_table != "" ) 
+            $query      = $ca_table.".parent_id:".$id;
+        else
+            $query      = "parent_id:".$id;
+
+
         $r_client = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,$query);
         $r_result = $r_client->request();
         $r_record = $r_result->getRawData();

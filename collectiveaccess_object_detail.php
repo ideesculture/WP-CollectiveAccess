@@ -6,11 +6,14 @@
  * Time: 15:31
  */
 
+
 require_once(plugin_dir_path( __FILE__ ) ."lib/virtualthemedpages/Virtual_Themed_Pages_BC.php");
+
 $vp =  new Virtual_Themed_Pages_BC();
 
 require_once(plugin_dir_path( __FILE__ ) ."lib/cawrappercache/ItemServiceCache.php");
 require_once(plugin_dir_path( __FILE__ ) ."lib/cawrappercache/SearchServiceCache.php");
+
 
 $vp->add('#/collections/object/detail#i', 'collectiveaccess_object_detail');
 $vp->add('#/collections/entity/detail#i', 'collectiveaccess_entity_detail');
@@ -34,7 +37,7 @@ function collectiveaccess_collection_detail($v, $url){
     collectiveaccess_detail("collection","ca_collections",$v, $url);
 }
 
-function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
+function collectiveaccess_detail($name_singular, $ca_table,$v, $url)
 {
 	global $wpdb;
     global $wp_ca_thumbnail;
@@ -60,15 +63,17 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
     $options = get_option('collectiveaccess_options');
     //var_dump($options);die();
 
-    $url_base = empty( $options["url_base"] ) ? 'localhost' : $options["url_base"];
-    $login = empty($options["login"]) ? 'admin' : $options["login"];
-    $password = empty($options["password"]) ? 'admin' : $options["password"];
-    $cache_duration = $options["cache_duration"];
+    $url_base       = empty( $options["url_base"] ) ? 'localhost' : $options["url_base"];
+    $login          = empty($options["login"]) ? 'admin' : $options["login"];
+    $password       = empty($options["password"]) ? 'admin' : $options["password"];
+    $cache_duration = empty($options["cache_duration"]) ? 3600 : $options["cache_duration"];
 
     // TODO : do not show anything if no password, send an error message on screen
 
+    //echo ($ca_table);
+
     if ( $url_base && ($id > 0)) {
-        $cache_duration=0;
+        
         $client = new ItemServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"GET",$id);
         $result = $client->request();
         $record = $result->getRawData();
@@ -93,11 +98,158 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
             foreach($matches[1] as $bundle) {
                 // create a dummy var & separator to store temp data for agregation (when multiple values or relations)
                 $bundle_value ="";
-                $separator = " ; ";
-
+                $separator = "";
                 $bundle_parts = explode(".",$bundle);
 
                 switch($bundle_parts[0]) {
+
+                    case "ca_entities" :
+                        
+                        switch($bundle_parts[1]) {
+                            case "txStoria_entity" :
+                                if (isset($record["ca_entities.txStoria_entity"][0]["en_US"]["txStoria_entity"])) {                                                                    
+                                    $label = "<b>Biografia: </b>";
+                                    $value = $record["ca_entities.txStoria_entity"][0]["en_US"]["txStoria_entity"] ;
+
+                                    $template = str_replace("^".$bundle, "<p>".$label.$value."</p>", $template);                                   
+                                } else {
+                                    //clean the frontend
+                                    $template = str_replace("^".$bundle, "", $template);                                   
+                                }
+
+                            break;       
+
+                            case "txBiblio" :
+                                if (isset($record["ca_entities.txBiblio"][0]["en_US"]["txBiblio"])) {                                
+
+                                    $label = "<b>Bibliografia: </b>";
+                                    $value = $record["ca_entities.txBiblio"][0]["en_US"]["txBiblio"] ;
+
+                                    $template = str_replace("^".$bundle, "<p>".$label.$value."</p>", $template);
+                                } else {
+                                    //clean the frontend
+                                    $template = str_replace("^".$bundle, "", $template);                                   
+                                }
+       
+                            break;       
+
+                        }    
+                        break;
+              
+                    case "ca_occurrences" :
+                        
+                        switch($bundle_parts[1]) {
+                            case "txDesc" :
+                                if (isset($record["ca_occurrences.txDesc"][0]["en_US"]["txDesc"])) {                                                                    
+                                    $label = "<b>Descrizione: </b>";
+                                    $value = $record["ca_occurrences.txDesc"][0]["en_US"]["txDesc"] ;
+
+                                    $template = str_replace("^".$bundle, "<p>".$label.$value."</p>", $template);                                   
+                                } else {
+                                    //clean the frontend
+                                    $template = str_replace("^".$bundle, "", $template);                                   
+                                }
+
+                            break;       
+                        }    
+                        break;
+
+
+                    case "ca_collections" :
+                        
+                        switch($bundle_parts[1]) {
+                            case "txDesc" :
+                                if (isset($record["ca_collections.txDesc"][0]["en_US"]["txDesc"])) {                                                                    
+                                    $label = "<b>Descrizione: </b>";
+                                    $value = $record["ca_collections.txDesc"][0]["en_US"]["txDesc"] ;
+
+                                    $template = str_replace("^".$bundle, "<p>".$label.$value."</p>", $template);                                   
+                                } else {
+                                    //clean the frontend
+                                    $template = str_replace("^".$bundle, "", $template);                                   
+                                }
+
+                                break;   
+ 
+                            case "external_link" :
+                                if (isset($record["ca_collections.external_link"][0]["none"])) {                                
+
+                                    $label = "<b>Link esterni: </b>";
+                                    $value = "<a href=\"".$record["ca_collections.external_link"][0]["none"]["url_entry"]."\">".$record["ca_collections.external_link"][0]["none"]["url_source"]."</a>" ;
+
+                                    $template = str_replace("^".$bundle, "<p>".$label.$value."</p>", $template);
+                                } else {
+                                    //clean the frontend
+                                    $template = str_replace("^".$bundle, "", $template);                                   
+                                }
+       
+                                break;       
+
+                            case "txBiblio" :
+                                if (isset($record["ca_collections.txBiblio"][0]["en_US"]["txBiblio"])) {                                
+
+                                    $label = "<b>Bibliografia: </b>";
+                                    $value = $record["ca_collections.txBiblio"][0]["en_US"]["txBiblio"] ;
+
+                                    $template = str_replace("^".$bundle, "<p>".$label.$value."</p>", $template);
+                                } else {
+                                    //clean the frontend
+                                    $template = str_replace("^".$bundle, "", $template);                                   
+                                }
+       
+                                break;          
+                            }    
+
+                        break;
+
+                    case "ca_objects" :
+                        
+                        switch($bundle_parts[1]) {
+                            case "txConten" :
+                                if (isset($record["ca_objects.txConten"][0]["en_US"]["txConten"])) {                                                                    
+                                    $label = "<b>Descrizione: </b>";
+                                    $value = $record["ca_objects.txConten"][0]["en_US"]["txConten"] ;
+
+                                    $template = str_replace("^".$bundle, "<p>".$label.$value."</p>", $template);                                   
+                                } elseif (isset($record["ca_objects.txConten"][0]["none"]["txConten"])) {                                                                    
+                                    $label = "<b>Descrizione: </b>";
+                                    $value = $record["ca_objects.txConten"][0]["none"]["txConten"] ;
+
+                                    $template = str_replace("^".$bundle, "<p>".$label.$value."</p>", $template);                                   
+                                } else {
+                                    //clean the frontend
+                                    $template = str_replace("^".$bundle, "", $template);                                   
+                                }
+                            break;       
+
+                            case "txSupporto" :
+                                if (isset($record["ca_objects.txSupporto"][0]["none"]["txSupporto"])) {                                                                    
+                                    $label = "<b>Supporto: </b>";
+                                    $value = $record["ca_objects.txSupporto"][0]["none"]["txSupporto"] ;
+
+                                    $template = str_replace("^".$bundle, "<p>".$label.$value."</p>", $template);                                   
+                                } else {
+                                    //clean the frontend
+                                    $template = str_replace("^".$bundle, "", $template);                                   
+                                }
+                            break;
+
+                            case "txTipo" :
+                                if (isset($record["ca_objects.txTipo"][0]["none"]["txTipo"])) {                                                                    
+                                    $label = "<b>Tipo: </b>";
+                                    $value = $record["ca_objects.txTipo"][0]["none"]["txTipo"] ;
+
+                                    $template = str_replace("^".$bundle, "<p>".$label.$value."</p>", $template);                                   
+                                } else {
+                                    //clean the frontend
+                                    $template = str_replace("^".$bundle, "", $template);                                   
+                                }
+                            break;                            
+                        }  
+
+
+                    break;
+
                     case "hierarchy" :
                         $hierarchy = collectiveaccess_detail_hierarchy($wpdb,$ca_table,$id);
                         // remove all not-found representations bundle from the template
@@ -121,12 +273,14 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                         switch($bundle_parts[1]) {
                             case "ca_objects" :
                                 if (isset($record["related"]["ca_objects"])) {
+                                   
                                     $linked_objects_view = new simpleview_idc("collectiveaccess_detail_linked_objects", $wordpress_theme);
+                                   
                                     foreach($record["related"]["ca_objects"] as $object) {
                                         $related_object_client = new ItemServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"GET",$object["object_id"]);
                                         $related_object_result = $related_object_client->request();
                                         $related_object_record = $related_object_result->getRawData();
-                                        //var_dump($related_object_record);die();
+                                        
                                         $representations = $related_object_record["representations"];
                                         $linked_representation_object = "";
                                         foreach ($representations as $representation) {
@@ -142,40 +296,60 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                                     }
                                     $linked_objects_view->setVar("linked_objects",$linked_objects);
                                     $bundle_value = $linked_objects_view->render();
-                                }
-                                $template = str_replace("^".$bundle,$bundle_value,$template);
+                                }                                
+                                $template = str_replace("^".$bundle,$bundle_value."<div class=\"clear\"></div>",$template);
                                 break;
                             case "ca_entities" :
-                                if (isset($record["related"]["ca_entities"]))
-                                foreach($record["related"]["ca_entities"] as $entity) {
-                                    if ($bundle_value) $bundle_value .= $separator;
-                                    $bundle_value .= "<a href=\"".get_site_url()."/collections/entity/detail/".$entity["entity_id"]."\">".$entity["displayname"]."</a>";
+                                if (isset($record["related"]["ca_entities"])){
+                                    foreach($record["related"]["ca_entities"] as $entity) {
+                                        if ($bundle_value) $bundle_value .= $separator;
+                                        $bundle_value .= "<li><a href=\"".get_site_url()."/collections/entity/detail/".$entity["entity_id"]."\">".$entity["displayname"]."</a></li>";
+                                    }
+                                    $label = "<b>Relazioni: </b>";
+                                    $template = str_replace("^".$bundle, "<div>".$label."<ul>".$bundle_value."</ul></div>", $template);                                   
+                                } else {
+                                    //clean the frontend
+                                    $template = str_replace("^".$bundle, "", $template);       
                                 }
-                                $template = str_replace("^".$bundle,$bundle_value,$template);
                                 break;
                             case "ca_occurrences" :
-                                if (isset($record["related"]["ca_occurrences"]))
-                                foreach($record["related"]["ca_occurrences"] as $entity) {
-                                    if ($bundle_value) $bundle_value .= $separator;
-                                    $bundle_value .= "<a href=\"".get_site_url()."/collections/occurrence/detail/".$occurrence["occurrence_id"]."\">".$occurrence["displayname"]."</a>";
-                                }
-                                $template = str_replace("^".$bundle,$bundle_value,$template);
+                                if (isset($record["related"]["ca_occurrences"])){
+                                    foreach($record["related"]["ca_occurrences"] as $occurrence) {
+                                        if ($bundle_value) $bundle_value .= $separator;
+                                        $bundle_value .= "<li><a href=\"".get_site_url()."/collections/occurrence/detail/".$occurrence["occurrence_id"]."\">".$occurrence["label"]."</a></li>";
+                                    }
+                                    $label = "<b>Strumenti: </b>";
+                                    $template = str_replace("^".$bundle, "<div>".$label."<ul>".$bundle_value."</ul></div>", $template);
+                                } else {
+                                    //clean the frontend
+                                    $template = str_replace("^".$bundle, "", $template);   
+                                }    
                                 break;
                             case "ca_places" :
-                                if (isset($record["related"]["ca_places"]))
-                                foreach($record["related"]["ca_places"] as $entity) {
-                                    if ($bundle_value) $bundle_value .= $separator;
-                                    $bundle_value .= "<a href=\"".get_site_url()."/collections/place/detail/".$entity["place_id"]."\">".$place["displayname"]."</a>";
+                                if (isset($record["related"]["ca_places"])){
+                                    foreach($record["related"]["ca_places"] as $place) {
+                                        if ($bundle_value) $bundle_value .= $separator;
+                                        $bundle_value .= "<li><a href=\"".get_site_url()."/collections/place/detail/".$place["place_id"]."\">".$place["displayname"]."</a></li>";
+                                    }
+                                    $label = "<b>Luoghi: </b>";
+                                    $template = str_replace("^".$bundle, "<div>".$label."<ul>".$bundle_value."</ul></div>", $template);                                    
+                                } else {
+                                    //clean the frontend
+                                    $template = str_replace("^".$bundle, "", $template);   
                                 }
-                                $template = str_replace("^".$bundle,$bundle_value,$template);
                                 break;
                             case "ca_collections" :
-                                if (isset($record["related"]["ca_collections"]))
-                                foreach($record["related"]["ca_collections"] as $collection) {
-                                    if ($bundle_value) $bundle_value .= $separator;
-                                    $bundle_value .= "<a href=\"/".get_site_url()."collections/collection/detail/".$collection["collection_id"]."\">".$collection["displayname"]."</a>";
-                                }
-                                $template = str_replace("^".$bundle,$bundle_value,$template);
+                                if (isset($record["related"]["ca_collections"])){                                  
+                                    foreach($record["related"]["ca_collections"] as $collection) {
+                                        if ($bundle_value) $bundle_value .= $separator;
+                                        $bundle_value .= "<li><a href=\"".get_site_url()."/collections/collection/detail/".$collection["collection_id"]."\">".$collection["name"]."</a></li>";
+                                    }
+                                    $label = "<b>Percorsi: </b>";
+                                    $template = str_replace("^".$bundle, "<div>".$label."<ul>".$bundle_value."</ul></div>", $template);
+                                } else {
+                                    //clean the frontend
+                                    $template = str_replace("^".$bundle, "", $template);   
+                                }    
                                 break;
                         }
                         break;
@@ -191,8 +365,48 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                         $template = str_replace("^".$bundle,$bundle_value,$template);
                         break;
                     case "idno" :
-                        $template = str_replace("^".$bundle,$record["idno"]["value"],$template);
+                        if (isset($record["idno"]["value"])) {                                                                    
+                            $label = "<b>Numero d'inventario: </b>";
+                            $value = $record["idno"]["value"];
+
+                            $template = str_replace("^".$bundle, "<p>".$label.$value."</p>", $template);                                   
+                        } else {
+                            //clean the frontend
+                            $template = str_replace("^".$bundle, "", $template);                                   
+                        }    
                         break;
+
+                    case "lifespan" :
+                        if (isset($record["lifespan"]["value"])) {                                                                    
+                            $label = "<b>Vita: </b>";
+                            $value = $record["lifespan"]["value"];
+
+                            $template = str_replace("^".$bundle, "<p>".$label.$value."</p>", $template);                                   
+                        } else {
+                            //clean the frontend
+                            $template = str_replace("^".$bundle, "", $template);                                   
+                        }    
+                        break;
+
+                    case "preferred_labels" :
+                        
+                        if (isset($record["preferred_labels"]["en_US"][0])) {                                                                    
+                            $label = "<b>Nome: </b>";
+                            $value = $record["preferred_labels"]["en_US"][0];
+
+                            $template = str_replace("^".$bundle, "<p>".$label.$value."</p>", $template);                                   
+                        }elseif (isset($record["preferred_labels"][""][0])) {                                                                    
+                            $label = "<b>Nome: </b>";
+                            $value = $record["preferred_labels"][""][0];
+
+                            $template = str_replace("^".$bundle, "<p>".$label.$value."</p>", $template);                                   
+                        } else {
+                            //clean the frontend
+                            $template = str_replace("^".$bundle, "", $template);                                   
+                        }    
+
+                        break;                   
+
                 }
             }
 
@@ -232,9 +446,12 @@ function collectiveaccess_detail($name_singular,$ca_table,$v, $url)
                     </a>
                 [/caption]".$template;
             }
+
+        
             $content_view = new simpleview_idc(($view ? $view : "collectiveaccess_detail"), $wordpress_theme);
             // template insertion
             $content_view->setVar("template",$template);
+
             if(isset($r_tilepic_url)) {
                 $content_view->setVar("tilepic_image_url",$r_tilepic_url);
                 $content_view->setVar("tilepic_remoteviewer_url","http://".$url_base."/viewers/apps/tilepic.php");
@@ -268,18 +485,36 @@ function collectiveaccess_detail_hierarchy($wpdb, $ca_table, $id) {
         $password = empty($options["password"]) ? 'admin' : $options["password"];
         $cache_duration = $options["cache_duration"];
 
-        $client = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"parent_id:".$id);
+        $client = new ItemServiceCache($wpdb, $cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"GET",$id);        
         $request = $client->request();
-        $result_data = $request->getRawData();
-        $result_data = $result_data["results"];
+        $result_data = $request->getRawData(); 
+
+        if (isset($result_data["preferred_labels"])) {
+            //$results .= "<h2>".reset(reset($result_data["preferred_labels"]))."</h2>";
+            $results    .= "<p><b>Archivio</b></p>";
+            $client      = new SearchServiceCache($wpdb,$cache_duration,"http://".$login.":".$password."@".$url_base,$ca_table,"ca_objects.parent_id:".$id);
+            $request     = $client->request();
+            $result_data = $request->getRawData();
+            $result_data = $result_data["results"];
+
+        } else {
+            $results .= "<h2>Root ID does not correspond to any record</h2>";
+            $result_data = array();
+        }
+        
+/*      echo "<pre>";
+        var_dump($result_data);
+        echo "</pre>";
+*/
 
         foreach($result_data as $result) {
-            $subsubcontent_view = new simpleview_idc("collectiveaccess_hierarchy_item", $wordpress_theme);
-            $subsubcontent_view->setVar("id",$result["id"]);
-            $subsubcontent_view->setVar("label",$result["display_label"]);
-            $subsubcontent_view->setVar("table",$ca_table);
-            $results .= $subsubcontent_view->render();
+            $subcontent_view = new simpleview_idc("collectiveaccess_hierarchy_item", $wordpress_theme);
+            $subcontent_view->setVar("id",$result["id"]);
+            $subcontent_view->setVar("label",$result["display_label"]);
+            $subcontent_view->setVar("table",$ca_table);
+            $results .= $subcontent_view->render(); 
         }
+
         $subcontent_view = new simpleview_idc("collectiveaccess_hierarchy", $wordpress_theme);
         $subcontent_view->setVar("results",$results);
         return $subcontent_view->render();
